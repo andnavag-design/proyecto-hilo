@@ -115,6 +115,12 @@ tr.new td{background:var(--soft);animation:pop .3s ease-out}
 .email.show{display:flex;animation:pop .25s ease-out}
 .email .h{font-size:11.5px;color:var(--muted)}
 .next{align-self:center;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:7px 14px;font-weight:600;font-size:12px;margin:6px 0}
+.opts.grid{display:grid;grid-template-columns:1fr 1fr}
+.sla{display:block;margin-top:4px;font-size:12.5px;color:#0D1B2A;background:#FFF6E5;border-radius:6px;padding:4px 8px}
+.outcome{display:flex;flex-direction:column;gap:6px}
+.outcome:empty{display:none}
+.obtns{display:flex;gap:6px;flex-wrap:wrap}
+.email .btn.alt{background:transparent;color:var(--purple);border:1px solid var(--purple)}
 .email .btn{align-self:flex-start;background:var(--purple);color:#fff;border-radius:7px;padding:6px 12px;font-weight:600;font-size:12px;border:0}
 .inside{background:var(--navy);color:#DDE1EC;border-radius:12px;padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .inside .label{color:#9EA3BC;margin:0 6px 0 0}
@@ -257,25 +263,142 @@ body.wide .k-shell{max-height:none}
 .cv-foot{font-size:12px;color:#8F94AD}
 .home{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600}
 @media (max-width:820px){.cv h1{font-size:46px}.cv-cards,.cv-how{grid-template-columns:1fr}}
+/* ===== Gancho de portada ===== */
+.hk-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hk-nav button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#C9CCD9;border-radius:999px;padding:6px 14px;font:600 12.5px var(--display)}
+.hk-nav button.on{background:var(--magenta);border-color:var(--magenta);color:var(--navy)}
+.hk-nav .skip{margin-left:auto;background:transparent;border:0;color:#B9BDD0;text-decoration:underline;padding:6px 4px}
+.hk-pane[hidden]{display:none}
+.hk-grid{display:grid;grid-template-columns:380px 1fr;gap:48px;align-items:center}
+.hk-phone{background:#0B141A;border:8px solid #1F2C34;border-radius:34px;height:560px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.45)}
+.hk-head{background:#1F2C34;padding:12px 14px;display:flex;gap:10px;align-items:center}
+.hk-head .av{width:34px;height:34px;border-radius:50%;background:var(--magenta);color:var(--navy);display:grid;place-items:center;font:700 13px var(--display)}
+.hk-head b{display:block;font-size:14px}
+.hk-head small{font-size:11.5px;color:#8696A0}
+.hk-chat{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px;background:#0B141A}
+.hk-day{align-self:center;background:#182229;color:#8696A0;font-size:11px;font-weight:600;letter-spacing:.06em;border-radius:8px;padding:4px 10px;margin:6px 0}
+.hk-b{max-width:84%;padding:8px 10px 6px;border-radius:10px;font-size:13.5px;line-height:1.38;animation:hkIn .35s ease-out both}
+.hk-b small{display:block;text-align:right;font-size:10.5px;color:#8696A0;margin-top:3px}
+.hk-b.me{align-self:flex-end;background:#005C4B;color:#E9EDEF;border-top-right-radius:2px}
+.hk-b.me small{color:#9FC5BC}
+.hk-b.bot{align-self:flex-start;background:#202C33;color:#E9EDEF;border-top-left-radius:2px}
+.hk-b .tk{color:#8696A0;letter-spacing:-2px}
+.hk-b .tk.read{color:#53BDEB}
+.hk-sys{align-self:center;background:rgba(203,108,230,.16);border:1px solid rgba(203,108,230,.45);color:#F1D5FA;font-size:11.5px;border-radius:8px;padding:6px 10px;text-align:center;animation:hkIn .35s ease-out both}
+@keyframes hkIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.hk-clock{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:8px 18px;font:600 15px var(--display);background:rgba(255,92,92,.14);border:1px solid rgba(255,120,120,.5);color:#FFB3B3;width:fit-content}
+.hk-clock.ok{background:rgba(46,204,113,.14);border-color:rgba(46,204,113,.55);color:#9BF0BE}
+.hk-clock b{font-variant-numeric:tabular-nums;font-size:18px}
+.hk-txt{display:flex;flex-direction:column;gap:18px}
+.hk-txt h2{font:700 46px/1.08 var(--display);margin:0;text-wrap:balance}
+.hk-txt h2 em{font-style:normal;color:var(--magenta)}
+.hk-txt p{margin:0;font-size:16px;line-height:1.5;color:#C9CCD9;max-width:560px}
+.hk-txt .hk-tag{font-size:11.5px;color:#8F94AD;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.hk-quote{font:600 26px/1.25 var(--display);color:#fff;border-left:4px solid var(--magenta);padding-left:16px;max-width:560px;opacity:0;transform:translateY(10px);transition:all .6s ease}
+.hk-quote.show{opacity:1;transform:none}
+.hk-btns{display:flex;gap:12px;flex-wrap:wrap;opacity:0;transition:opacity .5s ease}
+.hk-btns.show{opacity:1}
+.hk-btn{background:linear-gradient(135deg,var(--purple),var(--magenta));color:#fff;border:0;border-radius:10px;padding:13px 22px;font:600 15px var(--display);box-shadow:0 10px 30px rgba(131,58,224,.45)}
+.hk-btn.ghost{background:transparent;border:1px solid rgba(255,255,255,.3);box-shadow:none}
+.hk-btn:hover{filter:brightness(1.1)}
+/* Calculadora */
+.hk-calc h2{font:700 40px/1.1 var(--display);margin:0}
+.hk-calc h2 em{font-style:normal;color:var(--magenta)}
+.hk-calc .sub{font-size:16px;color:#C9CCD9;margin:8px 0 0;max-width:760px}
+.hk-cgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:22px}
+.hk-inputs{display:flex;flex-direction:column;gap:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px}
+.hk-in label{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#DADCE6;font-weight:600}
+.hk-in label span{font-weight:400;color:#8F94AD;font-size:12px}
+.hk-in .rw{display:flex;gap:12px;align-items:center;margin-top:8px}
+.hk-in input[type=range]{flex:1;accent-color:var(--magenta)}
+.hk-in input[type=number]{width:96px;background:#0B141A;border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:8px;padding:7px 8px;font:600 15px var(--display);text-align:right}
+.hk-out{background:linear-gradient(160deg,#2A1747,#16263B);border:1px solid rgba(203,108,230,.4);border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.hk-out .lbl{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#E3B7F2;font-weight:600}
+.hk-out .money{font:700 56px/1 var(--display);color:#fff;font-variant-numeric:tabular-nums}
+.hk-out .money small{font-size:18px;color:#C9CCD9;font-weight:500}
+.hk-out .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hk-out .row2 div{background:rgba(255,255,255,.06);border-radius:10px;padding:12px}
+.hk-out .row2 b{display:block;font:700 24px var(--display);font-variant-numeric:tabular-nums}
+.hk-out .row2 span{font-size:12px;color:#B9BDD0}
+.hk-out .formula{font-size:12.5px;color:#B9BDD0;line-height:1.5}
+.hk-note{font-size:12px;color:#8F94AD;margin-top:14px;line-height:1.5}
+@media (max-width:900px){.hk-grid,.hk-cgrid{grid-template-columns:1fr}.hk-phone{height:480px}.hk-txt h2{font-size:34px}.hk-out .money{font-size:42px}}
+
 </style>
 </head>
 <body>
 <div class="cover" id="cover" role="dialog" aria-label="Portada del demo">
  <div class="cv">
   <div class="cv-top"><img alt="HenkanCX" src="data:image/png;base64,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"><span>HenkanCX presenta</span><span class="x">Propuesta para Jean Center · Noviembre 2026</span></div>
+  <nav class="hk-nav" aria-label="Pasos de la portada">
+   <button type="button" data-pane="1" class="on">1 · El mensaje</button>
+   <button type="button" data-pane="2">2 · El costo</button>
+   <button type="button" data-pane="3">3 · La solución</button>
+   <button type="button" class="skip" id="hkSkip">Saltar al demo →</button>
+  </nav>
+
+  <!-- PANE 1 · Gancho -->
+  <section class="hk-pane" id="hkP1">
+   <div class="hk-grid">
+    <div class="hk-phone" aria-label="Conversación de ejemplo">
+     <div class="hk-head"><div class="av">JC</div><div><b>Jean Center</b><small id="hkStatus">últ. vez hace 3 días</small></div></div>
+     <div class="hk-chat" id="hkChat" aria-live="polite"></div>
+    </div>
+    <div class="hk-txt">
+     <span class="hk-tag" id="hkTag">Caso ilustrativo · un distribuidor en Santiago de Chile</span>
+     <div class="hk-clock" id="hkClock">⏱ Sin respuesta: <b id="hkHours">0 h</b></div>
+     <h2 id="hkTitle">Este cliente existía.<br><em>Nadie le contestó.</em></h2>
+     <p id="hkLead">Tres tiendas, ganas de vender la marca y tres mensajes en tres días. El viernes ya le compraba a otra.</p>
+     <p class="hk-quote" id="hkQuote">“Cada mensaje sin respuesta es un jean que se vende en otra tienda.”</p>
+     <div class="hk-btns" id="hkBtns">
+      <button type="button" class="hk-btn" id="hkRewind">↺ Ver lo que habría pasado con HILO</button>
+      <button type="button" class="hk-btn ghost" data-go="2">¿Cuánto le cuesta no contestar? →</button>
+     </div>
+    </div>
+   </div>
+  </section>
+
+  <!-- PANE 2 · Calculadora -->
+  <section class="hk-pane hk-calc" id="hkP2" hidden>
+   <h2>¿Cuánto le cuesta a Jean Center <em>no contestar</em>?</h2>
+   <p class="sub">Cada mensaje sin respuesta es un jean que se vende en otra tienda. Ajuste los valores con los datos reales de Jean Center y vea el resultado al instante.</p>
+   <div class="hk-cgrid">
+    <div class="hk-inputs">
+     <div class="hk-in"><label for="cMsgN">Mensajes que llegan por día <span>WhatsApp + redes</span></label><div class="rw"><input type="range" id="cMsg" min="5" max="300" step="5" value="40" aria-label="Mensajes por día"><input type="number" id="cMsgN" min="0" value="40"></div></div>
+     <div class="hk-in"><label for="cLostN">% sin respuesta o respondidos tarde <span>más de 1 hora</span></label><div class="rw"><input type="range" id="cLost" min="5" max="90" step="5" value="30" aria-label="Porcentaje sin respuesta"><input type="number" id="cLostN" min="0" max="100" value="30"></div></div>
+     <div class="hk-in"><label for="cConvN">% de esos contactos que habría comprado <span>conversión</span></label><div class="rw"><input type="range" id="cConv" min="1" max="50" step="1" value="10" aria-label="Porcentaje de conversión"><input type="number" id="cConvN" min="0" max="100" value="10"></div></div>
+     <div class="hk-in"><label for="cTicketN">Ticket promedio de una compra (USD) <span>ejemplo · usar el dato real</span></label><div class="rw"><input type="range" id="cTicket" min="20" max="3000" step="10" value="250" aria-label="Ticket promedio"><input type="number" id="cTicketN" min="0" value="250"></div></div>
+    </div>
+    <div class="hk-out" aria-live="polite">
+     <span class="lbl">Ventas que se van a otra tienda</span>
+     <div class="money"><span id="cMonth">$9.000</span> <small>al mes</small></div>
+     <div class="row2">
+      <div><b id="cYear">$108.000</b><span>al año</span></div>
+      <div><b id="cOrders">36</b><span>compras perdidas al mes</span></div>
+     </div>
+     <div class="formula" id="cFormula">1.200 mensajes al mes × 30% sin respuesta × 10% que habría comprado × $250</div>
+     <button type="button" class="hk-btn" data-go="3">Ahora veámoslo con HILO →</button>
+    </div>
+   </div>
+   <p class="hk-note">Valores iniciales de ejemplo para la conversación; no son datos de Jean Center. Referencia: responder en la primera hora hace 7 veces más probable calificar a un prospecto (Harvard Business Review, 2011).</p>
+  </section>
+
+  <!-- PANE 3 · Solución -->
+  <section class="hk-pane" id="hkP3" hidden>
   <h1>Proyecto <em>HILO</em><span>Cada persona que busca la marca, conectada con su distribuidor. En WhatsApp, Instagram, Messenger y chat web, las 24 horas.</span></h1>
-  <div class="cv-cards">
+  <div class="cv-cards" style="margin-top:28px">
    <div><i>💬</i><b>Ningún contacto se pierde</b><span>El agente responde al instante, captura los datos clave y registra cada conversación en Kaname.</span></div>
    <div><i>🧭</i><b>Cada uno a su lugar</b><span>Lo dirige a la tienda autorizada de su ciudad o a Ventas en Casa Matriz (Panamá), y confirma a las 48 horas que fue atendido.</span></div>
-   <div><i>📈</i><b>Visibilidad para decidir</b><span>Directorio con desempeño de cada distribuidor y un reporte semanal de lo que piden y desde dónde.</span></div>
+   <div><i>📈</i><b>Visibilidad para decidir</b><span>Directorio con desempeño de cada distribuidor, seguimiento del tiempo de respuesta de Ventas y un reporte semanal.</span></div>
   </div>
-  <div class="cv-go"><button type="button" id="goDemo">Iniciar demo →</button><span>Prototipo navegable · tiendas reales de Jean Center · cifras simuladas</span></div>
-  <div class="cv-how">
+  <div class="cv-go" style="margin-top:28px"><button type="button" id="goDemo">Iniciar demo →</button><span>Prototipo navegable · tiendas reales de Jean Center · cifras simuladas</span></div>
+  <div class="cv-how" style="margin-top:28px">
    <div><b>Elige un caso</b> arriba: tienda, mayorista o consumidor.</div>
    <div><b>Responde en el chat</b> como si fueras el cliente.</div>
    <div><b>Mira Kaname</b> registrar y enrutar en tiempo real.</div>
-   <div><b>Explora</b> fichas, distribuidores y el reporte semanal.</div>
+   <div><b>Explora</b> fichas, distribuidores, Ventas · SLA y el reporte semanal.</div>
   </div>
+  </section>
   <p class="cv-foot">HenkanCX · henkancx.com · Transformamos la experiencia del cliente desde el día 1.</p>
  </div>
 </div>
@@ -310,6 +433,7 @@ body.wide .k-shell{max-height:none}
         <div class="k-logo"><b>K</b><i>aname</i></div>
         <button type="button" class="k-nav on" data-view="contactos">Contactos <em id="badge">1</em></button>
         <button type="button" class="k-nav" data-view="dist">Distribuidores</button>
+        <button type="button" class="k-nav" data-view="sla">Ventas · SLA</button>
         <button type="button" class="k-nav" data-view="rep">Reporte semanal</button>
         <div class="k-nav" style="opacity:.55">Configuración</div>
       </nav>
@@ -338,6 +462,7 @@ body.wide .k-shell{max-height:none}
               <span id="emailHello"></span>
               <span id="emailBody"></span>
               <button class="btn" type="button" id="attended">Marcar como atendido</button>
+              <div id="outcome" class="outcome"></div>
             </div>
           </div>
           <div class="box">
@@ -461,6 +586,27 @@ body.wide .k-shell{max-height:none}
     </aside>
   </div>
 </div>
+<div class="view" id="v-sla" hidden>
+  <div class="k-head">
+    <div><h2>Ventas · SLA de Casa Matriz</h2><p>Oportunidades enviadas a Ventas: tiempo de primer contacto y resultado · noviembre 2026</p></div>
+    <span class="ex">Cifras simuladas</span>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><b>58</b><span>Oportunidades en Casa Matriz (mes)</span></div>
+    <div class="kpi"><b>86%</b><span>Contactadas dentro del SLA (24 h hábiles)</span></div>
+    <div class="kpi"><b>3 h 44 min</b><span>Tiempo promedio de primer contacto</span></div>
+    <div class="kpi"><b>14</b><span>Ventas ganadas registradas</span></div>
+  </div>
+  <p class="sim">Sin CRM adicional: el vendedor toma el caso desde el correo o desde Kaname y registra el resultado con un clic (Venta ganada, En negociación o Perdida). El agente confirma con el cliente si fue contactado. Así se mide el SLA de cada vendedor y la conversión de cada oportunidad.</p>
+  <div class="box">
+    <h3>Desempeño por vendedor</h3>
+    <div style="overflow-x:auto"><table><thead><tr><th>Vendedor</th><th class="r">Casos</th><th>Primer contacto</th><th>Dentro de SLA</th><th class="r">Vencidos</th><th class="r">En negociación</th><th class="r">Ganadas</th><th class="r">Perdidas</th><th class="r">Cierre</th></tr></thead><tbody id="slaRows"></tbody></table></div>
+  </div>
+  <div class="box">
+    <h3>Casos abiertos y su SLA</h3>
+    <div style="overflow-x:auto"><table><thead><tr><th>Prospecto</th><th>País</th><th>Vendedor</th><th>Recibido</th><th>Vence</th><th>SLA</th></tr></thead><tbody id="openRows"></tbody></table></div>
+  </div>
+</div>
 </div>
     </div>
     <div class="inside" aria-label="Piezas del agente">
@@ -488,9 +634,8 @@ const SEED=[["11:52","Instagram","Costa Rica · San José","Consumidor","Dónde 
 const SCENARIOS=[
  { canal:"WhatsApp", tel:"+502 5•••• 4821", pais:"Guatemala", flag:"🇬🇹",
    first:"Hola, buenas. Tengo una tienda y quiero información de sus jeans 👖",
-   intent:"información para tienda",
+   intent:"información para tienda", cityQ:"¿En qué ciudad de {p} está tu tienda?",
    steps:[
-    {q:"¿En qué ciudad está tu tienda?", f:"ciudad", o:["Ciudad de Guatemala","Quetzaltenango","Escuintla"]},
     {q:"¿Tienes <b>tienda física</b>?", f:"tienda", o:["Sí","No, vendo en línea"]},
     {q:"¿Vendes al <b>detal</b>, al <b>por mayor</b> o ambas?", f:"venta", o:["Al detal","Al por mayor","Ambas"]},
     {q:"¿Qué necesitas hoy?", f:"solicitud", o:["Información de producto","Quiero comprar"], log:true},
@@ -499,9 +644,8 @@ const SCENARIOS=[
    end:"distribuidor"},
  { canal:"WhatsApp", tel:"+56 9•••• 3307", pais:"Chile", flag:"🇨🇱",
    first:"Buenas tardes. Soy distribuidor mayorista y me interesa traer la marca a Chile. Busco unas 600 unidades para empezar.",
-   intent:"compra mayorista / distribución",
+   intent:"compra mayorista / distribución", cityQ:"¿En qué ciudad de {p} opera tu empresa?",
    steps:[
-    {q:"¿En qué ciudad opera tu empresa?", f:"ciudad", o:["Santiago","Valparaíso","Concepción"]},
     {q:"¿Tienes <b>tienda física</b>?", f:"tienda", o:["Sí, 3 tiendas","No, solo distribuyo"]},
     {q:"¿Vendes al <b>detal</b>, al <b>por mayor</b> o ambas?", f:"venta", o:["Al por mayor","Ambas"]},
     {q:"¿Qué necesitas hoy?", f:"solicitud", o:["Quiero distribuir la marca","Quiero comprar al por mayor"], log:true},
@@ -510,9 +654,8 @@ const SCENARIOS=[
    end:"matriz"},
  { canal:"Instagram", tel:"@valeria.ccs (Instagram)", pais:"Venezuela", flag:"🇻🇪",
    first:"Hola!! Vi un jean fit en su página, ¿dónde lo consigo en Venezuela?",
-   intent:"dónde comprar (consumidor)", noPhone:true,
+   intent:"dónde comprar (consumidor)", noPhone:true, consumer:true, cityQ:"¿En qué ciudad de {p} estás?",
    steps:[
-    {q:"¿En qué ciudad estás?", f:"ciudad", o:["Caracas","Valencia","Maracaibo"]},
     {q:"¿Qué línea te interesa?", f:"linea", o:["Fit / ajustado","Jean clásico"], trend:true},
     {q:"¿Nos compartes tu correo para avisarte de novedades? Es <b>opcional</b>.", f:"correo", o:["Prefiero no darlo","valeria@correo.ve"]}],
    end:"tienda"}
@@ -523,7 +666,7 @@ const tnow=()=>`12:${String(4+clock).padStart(2,"0")}`;
 const sleep=ms=>new Promise(r=>{const t=setTimeout(r,ms);timers.push(t)});
 const alive=id=>id===run;
 
-function renderFields(flash){fieldsEl.innerHTML=FIELDS.map(([k,l])=>`<div class="f ${flash===k?"flash":""}"><span>${l}</span><b class="${lead[k]?"":"empty"}">${lead[k]||"—"}</b></div>`).join("")}
+function renderFields(flash){fieldsEl.innerHTML=FIELDS.map(([k,l])=>`<div class="f ${flash===k?"flash":""}"><span>${l}</span><b class="${lead[k]?"":"empty"}">${lead[k]||"El agente lo pregunta…"}</b></div>`).join("")}
 function setField(k,v){lead[k]=v;renderFields(k)}
 function status(txt,cls){const s=$("status");s.textContent=txt;s.className="pill "+cls}
 function log(html,piece){tl.insertAdjacentHTML("afterbegin",`<li><time>${tnow()}</time><span>${html}${piece?`<span class="tag">Pieza ${piece}</span>`:""}</span></li>`);clock++;if(piece)lightPiece(piece)}
@@ -538,20 +681,52 @@ function options(list){return new Promise(res=>{
   chat.appendChild(wrap);scroll();wrap.querySelector("button").focus({preventScroll:true});
 })}
 function nextBtn(label){return new Promise(res=>{const b=document.createElement("button");b.type="button";b.className="next";b.textContent=label;b.onclick=()=>{b.remove();res()};chat.appendChild(b);scroll()})}
-function row(st,cls,asig){const S=SCENARIOS[sc];return [ "12:04",S.canal, lead.ciudad?`${S.pais} · ${lead.ciudad}`:"—", lead.tienda? (lead.tienda.startsWith("Sí")?"Tienda":(lead.venta||"").includes("mayor")?"Mayorista":"Tienda") : (sc===2?"Consumidor":"—"), lead.solicitud||"—", asig||"—", st, cls]}
+function row(st,cls,asig){const S=SCENARIOS[sc];return [ "12:04",S.canal, lead.ciudad?`${S.pais} · ${lead.ciudad}`:"Por confirmar", lead.tienda? (lead.tienda.startsWith("Sí")?"Tienda":(lead.venta||"").includes("mayor")?"Mayorista":"Tienda") : (lead.pais?"Consumidor":"Por confirmar"), lead.solicitud||"Por confirmar", asig||"Por asignar", st, cls]}
 function renderRows(extra){const rows=(extra?[extra]:[]).concat(SEED);$("rows").innerHTML=rows.map((r,i)=>`<tr class="${extra&&i===0?"new":""}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="pill ${r[7]}">${r[6]}</span></td></tr>`).join("")}
 function showEmail(head,hello,body,btn){$("emailHead").innerHTML=head;$("emailHello").innerHTML=hello;$("emailBody").innerHTML=body;const b=$("attended");b.textContent=btn;b.disabled=false;$("email").classList.add("show")}
 function summary(){return [`País y ciudad: ${lead.ciudad}, ${lead.pais}`,lead.tienda&&`Tienda física: ${lead.tienda}`,lead.venta&&`Venta: ${lead.venta}`,`Solicitud: ${lead.solicitud}`,`Interés: ${lead.linea}`,`Contacto: ${lead.tel}`,lead.correo&&lead.correo.includes("@")&&lead.correo].filter(Boolean).join(" · ")}
 
+const PAISES={"Guatemala":"🇬🇹","Venezuela":"🇻🇪","Costa Rica":"🇨🇷","Honduras":"🇭🇳","El Salvador":"🇸🇻","Colombia":"🇨🇴","República Dominicana":"🇩🇴","Panamá":"🇵🇦","Chile":"🇨🇱","Perú":"🇵🇪","México":"🇲🇽"};
+const EXTRA_CITIES={"Panamá":["Ciudad de Panamá","Colón","David"],"Chile":["Santiago","Valparaíso","Concepción"],"Perú":["Lima","Arequipa","Trujillo"],"México":["Ciudad de México","Monterrey","Guadalajara"]};
+const VENDEDORES=[
+ {nombre:"Carlos Méndez",zona:"Centroamérica y Panamá",paises:["Panamá","Guatemala","Costa Rica","Honduras","El Salvador"],correo:"cmendez@jeancenter.com"},
+ {nombre:"Laura Pérez",zona:"Venezuela, Colombia y Caribe",paises:["Venezuela","Colombia","República Dominicana"],correo:"lperez@jeancenter.com"},
+ {nombre:"Diego Rojas",zona:"Expansión: Chile, Perú y México",paises:["Chile","Perú","México"],correo:"drojas@jeancenter.com"}];
+const sellerFor=p=>VENDEDORES.find(v=>v.paises.includes(p))||VENDEDORES[2];
+let curRoute=null, caseState="";
+function citiesFor(p){
+  const st=DIST.filter(d=>d[1]===p);
+  if(!st.length) return EXTRA_CITIES[p]||["Capital","Otra ciudad"];
+  const tot={}; st.forEach(d=>tot[d[2]]=(tot[d[2]]||0)+d[4]);
+  return Object.keys(tot).sort((a,b)=>tot[b]-tot[a]).slice(0,4).concat(["Otra ciudad"]);
+}
+function decide(){
+  const p=lead.pais, sol=(lead.solicitud||"").toLowerCase(), venta=(lead.venta||"").toLowerCase();
+  const mayor=sol.includes("distribuir")||sol.includes("por mayor")||(sol.includes("comprar")&&venta.includes("mayor"));
+  if(p==="Panamá") return {type:"matriz",reason:"panama"};
+  if(mayor) return {type:"matriz",reason:"mayor"};
+  const stores=DIST.filter(d=>d[1]===p&&d[7]==="Activo");
+  if(!stores.length) return {type:"matriz",reason:"sin"};
+  const inCity=stores.filter(d=>d[2]===lead.ciudad), pool=(inCity.length?inCity:stores).slice().sort((a,b)=>b[5]-a[5]);
+  return {type:"store",d:pool[0],n:pool.length,inCity:inCity.length>0};
+}
+function optionsList(list){return new Promise(res=>{
+  const wrap=document.createElement("div");wrap.className="opts grid";
+  list.forEach(o=>{const b=document.createElement("button");b.type="button";b.className="opt";b.textContent=o;b.onclick=()=>{wrap.remove();addMsg("out",o);res(o)};wrap.appendChild(b)});
+  chat.appendChild(wrap);scroll();wrap.querySelector("button").focus({preventScroll:true});
+})}
+function row(st,cls,asig){const S=SCENARIOS[sc];return ["12:04",S.canal, lead.pais?`${lead.pais}${lead.ciudad?" · "+lead.ciudad:""}`:"Por confirmar", lead.tienda?(lead.tienda.startsWith("Sí")?"Tienda":(lead.venta||"").includes("mayor")?"Mayorista":"Tienda"):(lead.pais?"Consumidor":"Por confirmar"), lead.solicitud||"Por confirmar", asig||"Por asignar", st, cls]}
+
 async function start(){
-  timers.forEach(clearTimeout);timers=[];const id=++run;lead={};clock=0;const S=SCENARIOS[sc];
+  timers.forEach(clearTimeout);timers=[];const id=++run;lead={};clock=0;curRoute=null;caseState="";const S=SCENARIOS[sc];
   document.querySelectorAll("[data-sc]").forEach(b=>b.classList.toggle("on",+b.dataset.sc===sc));
   chat.innerHTML="";sys("HOY");sys("🔒 Los mensajes están cifrados de extremo a extremo.");
   document.querySelector(".wa-head small").textContent=S.canal==="Instagram"?"Mensaje directo de Instagram · asistente virtual":"Cuenta de empresa · asistente virtual";
   document.querySelector(".wa-head").style.background=S.canal==="Instagram"?"linear-gradient(90deg,#833AB4,#C13584,#E1306C)":"";
   document.querySelector(".label span").textContent="Lo que ve el cliente · "+S.canal;
   tl.innerHTML="";renderFields();renderRows();status("Esperando mensaje","p-none");
-  $("route").hidden=true;$("email").classList.remove("show");$("kpiTotal").textContent="14";$("kpiRef").textContent="9";$("kpiMat").textContent="3";lightPiece(0);
+  $("route").hidden=true;$("email").classList.remove("show");$("outcome")&&($("outcome").innerHTML="");
+  $("kpiTotal").textContent="14";$("kpiRef").textContent="9";$("kpiMat").textContent="3";lightPiece(0);
   await sleep(500); if(!alive(id))return;
   addMsg("out",S.first);
   setField("canal",S.canal);setField("tel",S.tel);status("Nuevo","p-new");
@@ -559,93 +734,117 @@ async function start(){
   log(`Mensaje recibido por <b>${S.canal}</b>. Contacto nuevo creado.`,6);
   await bot("¡Hola! 👋 Soy el asistente virtual de <b>Jean Center</b>. Te ayudo a encontrar dónde comprar o cómo trabajar con nuestras marcas.\n\n<i style=\"font-size:11.5px;color:#667781\">Al continuar aceptas el tratamiento de tus datos para atender tu solicitud.</i>",id,900); if(!alive(id))return;
   log(`Intención detectada: <b>${S.intent}</b>.`,1);
-  if(S.noPhone){ await bot(`Con gusto 😊. ¿Desde qué país nos escribes?`,id); if(!alive(id))return; await options([S.pais,"Colombia","Guatemala"]); }
-  else { await bot(`Veo que escribes desde un número de <b>${S.pais}</b> ${S.flag}. ¿Es correcto?`,id); if(!alive(id))return; await options([`Sí, ${S.pais}`,"Otro país"]); }
-  if(!alive(id))return; setField("pais",S.pais); if(S.end==="tienda") setField("solicitud","Dónde comprar"); log(`País confirmado${S.noPhone?"":" por prefijo telefónico"}: <b>${S.pais}</b>.`,1);
+  const others=Object.keys(PAISES).filter(p=>p!==S.pais);
+  let pais;
+  if(S.noPhone){
+    await bot("Con gusto 😊. ¿Desde qué país nos escribes?",id); if(!alive(id))return;
+    pais=await optionsList([S.pais,...others]); if(!alive(id))return;
+    log(`País indicado por el cliente: <b>${pais}</b>.`,1);
+  } else {
+    await bot(`Veo que escribes desde un número de <b>${S.pais}</b> ${S.flag}. ¿Es correcto?`,id); if(!alive(id))return;
+    const v=await options([`Sí, ${S.pais}`,"No, estoy en otro país"]); if(!alive(id))return;
+    if(v.startsWith("Sí")){pais=S.pais;log(`País confirmado por prefijo telefónico: <b>${pais}</b>.`,1);}
+    else{
+      await bot("Entendido. ¿Desde qué país nos escribes?",id); if(!alive(id))return;
+      pais=await optionsList(others); if(!alive(id))return;
+      log(`El cliente indicó otro país: <b>${pais}</b> (su número es de ${S.pais}). Se usa el país indicado.`,1);
+    }
+  }
+  setField("pais",pais); if(S.consumer) setField("solicitud","Dónde comprar");
+  await bot(S.cityQ.replace("{p}",`${pais} ${PAISES[pais]||""}`),id); if(!alive(id))return;
+  const ciudad=await optionsList(citiesFor(pais)); if(!alive(id))return;
+  setField("ciudad",ciudad==="Otra ciudad"?"Otra ciudad":ciudad);
   for(const st of S.steps){
     await bot(st.q,id); if(!alive(id))return;
     const v=await options(st.o); if(!alive(id))return;
     setField(st.f, v.startsWith("Prefiero")?"No proporcionado":v);
     if(st.log) log(`Solicitud clasificada: <b>${v}</b>.`,1);
-    if(st.trend) log(`Tendencia registrada: <b>${v}</b> · ${S.pais}.`,6);
+    if(st.trend) log(`Tendencia registrada: <b>${v}</b> · ${pais}.`,6);
   }
-  if(S.end==="distribuidor") await endDistribuidor(id);
-  if(S.end==="matriz") await endMatriz(id);
-  if(S.end==="tienda") await endTienda(id);
+  curRoute=decide();
+  if(curRoute.type==="store") await endStore(id,curRoute); else await endMatriz(id,curRoute.reason);
 }
 
-async function endDistribuidor(id){
-  const city=lead.ciudad, st=city==="Quetzaltenango"?"Tiendas La Riviera":"Urban Guatemala", i=distIdx(st), d=DIST[i], c=dContact(i);
+async function endStore(id,r){
+  const d=r.d, i=distIdx(d[0]), c=dContact(i), city=lead.ciudad, st=d[0];
+  caseState="store";
   $("route").hidden=false;
-  $("ruleTxt").textContent=`SI país = Guatemala Y ciudad = ${city} Y solicitud = ${lead.solicitud} → tienda autorizada más cercana`;
+  $("ruleTxt").textContent=`SI país = ${lead.pais} Y ciudad = ${city} Y solicitud = ${lead.solicitud} → tienda autorizada${r.inCity?" de la ciudad":" con mejor respuesta del país"}`;
   $("routeTxt").innerHTML=`Enrutado a <b>${st}</b> · tienda autorizada en ${d[2]} (${d[5]}% de respuesta)`;
-  log(`Directorio consultado: <b>2 tiendas</b> en Guatemala. Elegida ${st} por cercanía a ${city}.`,2);
-  await bot(`¡Gracias! Para <b>${city}</b> te atiende nuestra tienda autorizada:<div class="card-dist"><b>${st}</b>${c.dir}<br>Venta al detal · Atiende: ${c.nombre}<span class="link">📷 @${d[8]}</span><span class="link">💬 Escribirles por WhatsApp</span></div>`,id,1100); if(!alive(id))return;
+  log(`Directorio consultado: <b>${r.n} tienda${r.n>1?"s":""}</b> ${r.inCity?"en "+city:"en "+lead.pais+" (ninguna en "+city+")"}. Elegida ${st}.`,2);
+  const where=r.inCity?`En <b>${city}</b>`:`No tenemos tienda en ${city==="Otra ciudad"?"tu ciudad":city}, pero en <b>${lead.pais}</b>`;
+  await bot(`¡Gracias! ${where} te atiende nuestra tienda autorizada:<div class="card-dist"><b>${st}</b>${c.dir}<br>Venta al detal · Atiende: ${c.nombre}<span class="link">📷 @${d[8]}</span><span class="link">💬 Escribirles por WhatsApp</span></div>`,id,1100); if(!alive(id))return;
   await bot("Ya les avisamos para que te contacten. En 2 días te escribo para saber si te atendieron. 🙌",id); if(!alive(id))return;
   setField("asignado",st);status("Referido a tienda","p-ref");
   renderRows(row("Referido","p-ref",st));$("kpiRef").textContent="10";
-  showEmail(`Correo enviado a <b>${c.correo}</b> · Asunto: Nuevo contacto de Jean Center – ${city}`,`Hola, ${c.nombre.split(" ")[0]} (<b>${st}</b>). Un cliente de su zona busca productos Jean Center:`,summary(),"Marcar como atendido");
+  showEmail(`Correo enviado a <b>${c.correo}</b> · Asunto: Nuevo contacto de Jean Center – ${d[2]}`,`Hola, ${c.nombre.split(" ")[0]} (<b>${st}</b>). Un cliente de su zona busca productos Jean Center:`,summary(),"Marcar como atendido");
   log(`Correo con el resumen enviado a <b>${st}</b> (${c.correo}).`,6);
   await sleep(500); log("Seguimiento programado para dentro de <b>48 horas</b>.",4);
-  await followUp(id,st);
+  await followUp(id,st,"store");
 }
 
-async function endMatriz(id){
+async function endMatriz(id,reason){
+  const p=lead.pais, v=sellerFor(p);
+  caseState="matriz"; lead.vendedor=v.nombre;
   $("route").hidden=false;
-  $("ruleTxt").textContent=`SI país = Chile (sin distribuidor) Y solicitud = ${lead.solicitud} → Casa Matriz · Ventas`;
-  $("routeTxt").innerHTML="Enrutado a <b>Ventas Casa Matriz</b> · Chile no tiene distribuidor activo: oportunidad de expansión";
-  log("Directorio consultado: <b>0 distribuidores</b> en Chile. Se aplica la regla de Casa Matriz.",2);
-  await bot("¡Excelente! Hoy no tenemos tiendas en <b>Chile</b>, así que tu solicitud va directo a nuestro equipo de <b>Ventas en Casa Matriz (Panamá)</b>.",id,1000); if(!alive(id))return;
-  await bot("Te paso con un asesor. Te contactará en un máximo de <b>24 horas hábiles</b> con la propuesta para distribuidores. 🤝",id); if(!alive(id))return;
+  const rule={panama:`SI país = Panamá → Casa Matriz · ${v.nombre}`,mayor:`SI solicitud = ${lead.solicitud} → Ventas Casa Matriz · ${v.nombre}`,sin:`SI país = ${p} (sin tiendas) → Ventas Casa Matriz · ${v.nombre}`}[reason];
+  $("ruleTxt").textContent=rule;
+  $("routeTxt").innerHTML=`Enrutado a <b>${v.nombre}</b> · Ventas Casa Matriz (${v.zona})<br><span class="sla">⏱ SLA: primer contacto en máximo <b>24 h hábiles</b> · vence el 13 nov, 12:10</span>`;
+  log(reason==="sin"?`Directorio consultado: <b>0 tiendas</b> en ${p}. Oportunidad de expansión.`:reason==="panama"?"Panamá se atiende directamente en Casa Matriz.":"Compra al por mayor: se atiende en Casa Matriz.",2);
+  const msg={panama:"En <b>Panamá</b> te atiende directamente nuestra <b>Casa Matriz</b>.",mayor:"Las compras al por mayor y las nuevas distribuciones las atiende directamente nuestro equipo de <b>Ventas en Casa Matriz (Panamá)</b>.",sin:`Hoy no tenemos tiendas en <b>${p}</b>, así que tu solicitud va directo a nuestro equipo de <b>Ventas en Casa Matriz (Panamá)</b>.`}[reason];
+  await bot(`¡Excelente! ${msg}`,id,1000); if(!alive(id))return;
+  await bot(`Te paso con <b>${v.nombre.split(" ")[0]}</b>, tu asesor de Ventas. Te contactará en un máximo de <b>24 horas hábiles</b>. 🤝`,id); if(!alive(id))return;
   sys("El asistente se pausó · un asesor de Ventas atenderá este chat");
-  setField("asignado","Ventas Casa Matriz");status("En Casa Matriz","p-wait");
-  renderRows(row("En Casa Matriz","p-wait","Ventas Casa Matriz"));$("kpiMat").textContent="4";
-  showEmail(`Correo enviado a <b>Ventas Casa Matriz · Panamá</b> · Asunto: 🔥 Oportunidad de distribución – Chile`,`Hola, equipo de Ventas. Un prospecto de un país <b>sin distribuidor</b> quiere trabajar con la marca:`,summary()+" · Volumen mencionado: ~600 unidades","Tomar el caso");
-  log("Correo de oportunidad enviado a <b>Ventas Casa Matriz</b> con el resumen de la conversación.",5);
+  setField("asignado",`${v.nombre} · Ventas`);status("En Casa Matriz","p-wait");
+  renderRows(row("En Casa Matriz","p-wait",v.nombre));$("kpiMat").textContent="4";
+  showEmail(`Correo enviado a <b>${v.correo}</b> · Asunto: 🔥 Nueva oportunidad – ${p} · SLA 24 h hábiles`,`Hola, ${v.nombre.split(" ")[0]}. Tienes un nuevo prospecto asignado:`,summary(),"Tomar el caso");
+  log(`Correo de oportunidad enviado a <b>${v.nombre}</b> con el resumen de la conversación.`,5);
+  log(`SLA iniciado: primer contacto en máximo <b>24 h hábiles</b> (vence 13 nov, 12:10).`,6);
   log("Asistente en pausa · se reactiva solo en <b>8 horas</b> si nadie responde.",5);
-  log("Tarea creada en Kaname: <b>Contactar prospecto de Chile</b> · vence en 24 h hábiles.",6);
+  await followUp(id,v.nombre,"matriz");
 }
 
-const VE_STORE={Caracas:["Palacio del Jeans","elpalaciodel.jean",6],Valencia:["Dollhouse","dollhousejeans",3],Maracaibo:["Camerino","camerinofashion",0]};
-async function endTienda(id){
-  const city=lead.ciudad, [st,ig,more]=VE_STORE[city]||VE_STORE.Caracas, r=DIST[distIdx(st)][5];
-  $("route").hidden=false;
-  $("ruleTxt").textContent=`SI país = Venezuela Y ciudad = ${city} Y perfil = consumidor → tienda con mejor respuesta en la ciudad`;
-  $("routeTxt").innerHTML=`Enrutado a <b>${st}</b> · tienda autorizada en ${city} (${r}% de respuesta)`;
-  log(`Directorio consultado: <b>${more+1} tienda${more?"s":""}</b> en ${city}. Elegida ${st}.`,2);
-  await bot(`¡Genial! En <b>${city}</b> encuentras la línea ${lead.linea.toLowerCase()} aquí:<div class="card-dist"><b>${st}</b>Tienda autorizada Jean Center · ${city}<span class="link">📷 @${ig}</span><span class="link">💬 Escribirles por WhatsApp</span></div>${more?`<span style="font-size:12px;color:#667781">Hay ${more} tiendas más en ${city}. Escribe "más" para verlas.</span>`:""}`,id,1100); if(!alive(id))return;
-  await bot("¿Te ayudo con algo más? 😊",id); if(!alive(id))return;
-  const v=await options(["No, gracias","Quiero comprar al por mayor"]); if(!alive(id))return;
-  if(v==="No, gracias"){await bot("¡Gracias por escribirnos! Que disfrutes tu Jean Center 💙",id); }
-  else {await bot("Perfecto, te paso con nuestro equipo de Ventas en Casa Matriz.",id); setField("solicitud","Compra al por mayor");}
-  setField("asignado",st);status("Referido a tienda","p-ref");
-  renderRows(row("Referido","p-ref",st));$("kpiRef").textContent="10";
-  log("Contacto registrado como <b>consumidor</b>. Se avisa a la tienda y queda en su lista de contactos.",6);
-  log(`Dato para el reporte: interés en <b>${lead.linea}</b> desde Instagram · ${city}, Venezuela.`,6);
-}
-
-async function followUp(id,dist){
+async function followUp(id,who,kind){
   await sleep(600); if(!alive(id))return;
-  await nextBtn("⏩ Simular: 48 horas después"); if(!alive(id))return;
-  sys("DENTRO DE 2 DÍAS"); clock+=40;
-  await bot(`Hola 👋, soy el asistente de <b>Jean Center</b>. ¿Pudiste hablar con <b>${dist}</b>?`,id,900); if(!alive(id))return;
+  const m=kind==="matriz";
+  await nextBtn(m?"⏩ Simular: 24 horas después":"⏩ Simular: 48 horas después"); if(!alive(id))return;
+  sys(m?"AL DÍA SIGUIENTE":"DENTRO DE 2 DÍAS"); clock+=40;
+  await bot(m?`Hola 👋, soy el asistente de <b>Jean Center</b>. ¿Ya te contactó <b>${who.split(" ")[0]}</b>, nuestro asesor de Ventas?`:`Hola 👋, soy el asistente de <b>Jean Center</b>. ¿Pudiste hablar con <b>${who}</b>?`,id,900); if(!alive(id))return;
   log("Mensaje de seguimiento enviado (plantilla aprobada por Meta).",4);
-  const v=await options(["Sí, ya me atendieron","No, nadie me contactó"]); if(!alive(id))return;
+  const v=await options([m?"Sí, ya me contactó":"Sí, ya me atendieron","No, nadie me contactó"]); if(!alive(id))return;
   if(v.startsWith("Sí")){
     await bot("¡Qué bueno! Gracias por confirmarnos. 💙",id); if(!alive(id))return;
-    status("Atendido por distribuidor","p-ok");renderRows(row("Atendido","p-ok",dist));
-    log("El cliente confirmó que fue <b>atendido</b>. Suma a la tasa de respuesta del distribuidor.",4);
+    if(m){ if(caseState!=="taken") takeCase(true); log("El cliente confirmó el contacto del asesor. <b>SLA cumplido</b> ✓",4); }
+    else { status("Atendido por tienda","p-ok");renderRows(row("Atendido","p-ok",who)); log("El cliente confirmó que fue <b>atendido</b>. Suma a la tasa de respuesta de la tienda.",4); }
   } else {
-    await bot("Lo sentimos. Ya avisamos a nuestro equipo de <b>Ventas</b> para que te contacte hoy mismo.",id); if(!alive(id))return;
-    status("Escalado a Casa Matriz","p-wait");renderRows(row("Escalado","p-wait","Ventas Casa Matriz"));setField("asignado","Ventas Casa Matriz");
-    log("Distribuidor <b>no respondió</b>. Caso escalado a Ventas Casa Matriz y alerta al responsable de país.",5);
+    if(m){
+      await bot("Lo sentimos. Ya escalamos tu caso con la gerencia comercial para que te contacten hoy mismo.",id); if(!alive(id))return;
+      status("SLA vencido · escalado","p-wait");renderRows(row("SLA vencido","p-wait",who));
+      log(`<b>SLA incumplido</b> por ${who}. Alerta enviada a la gerencia comercial.`,5);
+    } else {
+      await bot("Lo sentimos. Ya avisamos a nuestro equipo de <b>Ventas</b> para que te contacte hoy mismo.",id); if(!alive(id))return;
+      status("Escalado a Casa Matriz","p-wait");renderRows(row("Escalado","p-wait","Ventas Casa Matriz"));setField("asignado","Ventas Casa Matriz");
+      log("La tienda <b>no respondió</b>. Caso escalado a Ventas Casa Matriz y alerta al responsable de país.",5);
+    }
   }
 }
-
-$("attended").onclick=()=>{const b=$("attended");
-  if(sc===1){status("En gestión · Ventas","p-ok");log("Un asesor de Ventas <b>tomó el caso</b>.",5);renderRows(row("En gestión","p-ok","Ventas Casa Matriz"));}
-  else{status("Atendido por distribuidor","p-ok");log("El distribuidor marcó el contacto como <b>atendido</b>.",6);renderRows(row("Atendido","p-ok",lead.asignado));}
+function takeCase(quiet){
+  caseState="taken";
+  const b=$("attended");b.disabled=true;b.textContent="Caso tomado ✓";
+  status("En gestión · Ventas","p-ok");renderRows(row("En gestión","p-ok",lead.vendedor));
+  log(`${lead.vendedor} tomó el caso y contactó al cliente en <b>1 h 12 min</b> · dentro del SLA ✓`,5);
+  $("routeTxt").querySelector(".sla")&&($("routeTxt").querySelector(".sla").innerHTML="⏱ SLA cumplido: primer contacto en <b>1 h 12 min</b> (meta: 24 h hábiles) ✓");
+  $("outcome").innerHTML=`<span class="h">Registrar resultado de la oportunidad (sin CRM adicional, con un clic):</span><div class="obtns"><button type="button" class="btn ob" data-r="Venta ganada">Venta ganada</button><button type="button" class="btn ob alt" data-r="En negociación">En negociación</button><button type="button" class="btn ob alt" data-r="Perdida">Perdida</button></div>`;
+  $("outcome").querySelectorAll(".ob").forEach(x=>x.onclick=()=>{const r=x.dataset.r;
+    status(r,r==="Venta ganada"?"p-ok":r==="Perdida"?"p-none":"p-ref");renderRows(row(r,r==="Venta ganada"?"p-ok":r==="Perdida"?"p-none":"p-ref",lead.vendedor));
+    log(`${lead.vendedor} registró el resultado: <b>${r}</b>. Suma a su tasa de cierre en el tablero de Ventas.`,6);
+    $("outcome").innerHTML=`<span class="h">Resultado registrado: <b>${r}</b> ✓ · visible en <b>Ventas · SLA</b></span>`;});
+}
+$("attended").onclick=()=>{
+  if(caseState==="matriz"){takeCase();return}
+  const b=$("attended");status("Atendido por tienda","p-ok");log("La tienda marcó el contacto como <b>atendido</b>.",6);renderRows(row("Atendido","p-ok",lead.asignado));
   b.disabled=true;b.textContent="Hecho ✓"};
+
 document.querySelectorAll("[data-sc]").forEach(b=>b.onclick=()=>{sc=+b.dataset.sc;start()});
 $("reset").onclick=start;
 /* Vistas de Kaname: directorio y reporte (datos de ejemplo) */
@@ -716,7 +915,7 @@ document.querySelectorAll("[data-sc]").forEach(b=>b.addEventListener("click",()=
 /* ===== Ficha del contacto (datos de ejemplo) ===== */
 const B=(t,side="in",time="")=>({side,html:t,t:time});
 const FICHAS={
- s0:{nombre:"María José Vargas",ini:"MV",canal:"Instagram",tel:"@majo.vargas.cr",correo:"majo.vargas@correo.cr",pais:"Costa Rica",ciudad:"San José",perfil:"Consumidor",tienda:"No",venta:"—",origen:"Mensaje directo de Instagram",primera:"28 oct 2026",idioma:"Español",
+ s0:{nombre:"María José Vargas",ini:"MV",canal:"Instagram",tel:"@majo.vargas.cr",correo:"majo.vargas@correo.cr",pais:"Costa Rica",ciudad:"San José",perfil:"Consumidor",tienda:"No",venta:"No aplica · compra personal",origen:"Mensaje directo de Instagram",primera:"28 oct 2026",idioma:"Español",
    tags:["Consumidor","Fit / ajustado","Instagram","Recurrente"],potencial:"Bajo",volumen:"Compra personal",lineas:"Fit / ajustado, Jean clásico",
    estado:"Atendido",asignado:"Punto Favorito",asigTipo:"dist",rate:96,
    dias:[{d:"12 nov 2026",canal:"Instagram",txt:"Volvió a escribir preguntando si Punto Favorito tenía tallas 28 y 30 en fit. Se le dio el contacto directo de la tienda.",int:"Dónde comprar",sent:"Positivo 😊"},
@@ -741,7 +940,7 @@ const FICHAS={
    notas:[{who:"Ventas · Carlos M.",t:"12 nov · 11:45",txt:"Ojo: LoMax tiene 55% de respuesta este mes. Si en 48 h no la contactan, la tomamos desde Casa Matriz."}],
    tasks:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:"14 nov · 11:15 · Agente",done:false},{t:"Revisar desempeño de LoMax",due:"18 nov · Ventas",done:false}],
    route:[{t:"12 nov · 11:14",txt:"Tienda en San Pedro Sula → LoMax"}]},
- s3:{nombre:"Luis Herrera",ini:"LH",canal:"WhatsApp",tel:"+507 6•••• 1188",correo:"luis.h@correo.pa",pais:"Panamá",ciudad:"Ciudad de Panamá",perfil:"Consumidor",tienda:"No",venta:"—",origen:"WhatsApp",primera:"12 nov 2026",idioma:"Español",
+ s3:{nombre:"Luis Herrera",ini:"LH",canal:"WhatsApp",tel:"+507 6•••• 1188",correo:"luis.h@correo.pa",pais:"Panamá",ciudad:"Ciudad de Panamá",perfil:"Consumidor",tienda:"No",venta:"No aplica · compra personal",origen:"WhatsApp",primera:"12 nov 2026",idioma:"Español",
    tags:["Consumidor","Jean clásico","Panamá"],potencial:"Bajo",volumen:"Compra personal",lineas:"Jean clásico",
    estado:"Atendido",asignado:"Casa Matriz Panamá",asigTipo:"matriz",resp:"Ventas Panamá",
    dias:[{d:"12 nov 2026",canal:"WhatsApp",txt:"Buscaba jean clásico en Ciudad de Panamá. Como en Panamá atiende directamente Casa Matriz, se derivó a Ventas Panamá y confirmó en el seguimiento que lo atendieron.",int:"Dónde comprar",sent:"Positivo 😊"}],
@@ -749,6 +948,11 @@ const FICHAS={
    notas:[],tasks:[{t:"Seguimiento automático enviado",due:"Completado",done:true}],
    route:[{t:"12 nov · 10:57",txt:"Panamá → Casa Matriz (Ventas Panamá)"}]}
 };
+const LIVE_DEF=[
+ {correo:"tienda.lucia@correo.gt",pais:"Guatemala",ciudad:"Ciudad de Guatemala",tienda:"Sí",venta:"Al detal",solicitud:"Información de producto",linea:"Jean clásico",asignado:"Urban Guatemala",prop:"Urban Guatemala · sugerido"},
+ {correo:"compras@andesmoda.cl",pais:"Chile",ciudad:"Santiago",tienda:"Sí, 3 tiendas",venta:"Al por mayor",solicitud:"Quiero distribuir la marca",linea:"Varias líneas",asignado:"Ventas Casa Matriz",prop:"Ventas Casa Matriz · sugerido"},
+ {correo:"valeria@correo.ve",pais:"Venezuela",ciudad:"Caracas",tienda:"No",venta:"No aplica · compra personal",solicitud:"Dónde comprar",linea:"Fit / ajustado",asignado:"Palacio del Jeans",prop:"Palacio del Jeans · sugerido"}];
+const LV=k=>{const v=lead[k],d=LIVE_DEF[sc][k];if(k==="correo"&&v&&!v.includes("@"))return "No compartido (opcional)";return v||d};
 const LIVE_NAMES=[["Lucía Morales","Tienda Lucía"],["Felipe Rojas","Andes Moda"],["Valeria Campos",null]];
 let transcript=[], curFicha=null;
 /* registrar mensajes del chat para la ficha */
@@ -757,15 +961,15 @@ const _sys=sys; sys=function(t){transcript.push({side:"sys",html:t});_sys(t)};
 const _start=start; start=function(){transcript=[];return _start()};
 
 function liveFicha(){
-  const S=SCENARIOS[sc],[nm,emp]=LIVE_NAMES[sc];const p=lead.tienda?(lead.tienda.startsWith("Sí")?"Tienda":"Mayorista"):(sc===2?"Consumidor":"—");
-  const st=$("status").textContent; const matriz=sc===1||st.includes("Casa Matriz")||st.includes("Escalado");
-  return {live:true,nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),empresa:emp,canal:S.canal,tel:lead.tel||S.tel,correo:lead.correo||"—",pais:lead.pais||"—",ciudad:lead.ciudad||"—",perfil:p,tienda:lead.tienda||"—",venta:lead.venta||"—",origen:S.canal,primera:"12 nov 2026",idioma:"Español",
-   tags:[p,lead.linea,S.pais,sc===1?"Alto potencial":null,sc===1?"País sin distribuidor":null].filter(x=>x&&x!=="—"),
-   potencial:sc===1?"Alto":sc===0?"Medio":"Bajo",volumen:sc===1?"~600 unidades (mencionado)":sc===0?"~60 unidades / mes (estimado)":"Compra personal",lineas:lead.linea||"—",
-   estado:st,asignado:lead.asignado||"Sin asignar",asigTipo:matriz?"matriz":"dist",rate:(DIST[distIdx(lead.asignado)]||[])[5]||90,resp:matriz?"Carlos M. (Ventas)":null,
-   dias:[{d:"12 nov 2026",canal:S.canal,txt:lead.ciudad?`${p==="—"?"Contacto":p} en ${lead.ciudad}, ${lead.pais}. Solicitud: ${(lead.solicitud||"").toLowerCase()}. Interés en ${(lead.linea||"").toLowerCase()}. ${lead.asignado?"Derivado a "+lead.asignado+".":"Conversación en curso."}`:"Conversación en curso: el agente aún está capturando los datos.",int:lead.solicitud||"—",sent:sc===1?"Muy interesado 🔥":"Positivo 😊"}],
-   conv:transcript,notas:[],tasks:lead.asignado?(matriz?[{t:"Contactar prospecto y enviar propuesta",due:"13 nov · 12:00 · Ventas",done:false}]:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:"14 nov · 12:10 · Agente",done:false}]):[],
-   route:lead.asignado?[{t:"12 nov · 12:10",txt:$("ruleTxt").textContent}]:[]};
+  const S=SCENARIOS[sc],[nm,emp]=LIVE_NAMES[sc];const p=sc===2?"Consumidor":(LV("tienda").startsWith("Sí")&&sc===0?"Tienda":sc===1?"Mayorista":"Tienda");
+  const st=$("status").textContent; const matriz=caseState==="matriz"||caseState==="taken"||st.includes("Escalado");
+  return {live:true,nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),empresa:emp,canal:S.canal,tel:lead.tel||S.tel,correo:LV("correo"),pais:LV("pais"),ciudad:LV("ciudad"),perfil:p,tienda:LV("tienda"),venta:LV("venta"),origen:S.canal,primera:"12 nov 2026",idioma:"Español",
+   tags:[p,LV("linea"),LV("pais"),matriz?"Alto potencial":null,curRoute&&curRoute.reason==="sin"?"País sin tiendas":null].filter(x=>x&&x!=="—"),
+   potencial:sc===1?"Alto":sc===0?"Medio":"Bajo",volumen:sc===1?"~600 unidades (mencionado)":sc===0?"~60 unidades / mes (estimado)":"Compra personal",lineas:LV("linea"),
+   estado:st,asignado:lead.asignado||LIVE_DEF[sc].prop,asigTipo:matriz?"matriz":"dist",rate:(DIST[distIdx(lead.asignado||LIVE_DEF[sc].asignado)]||[])[5]||90,resp:matriz?(lead.vendedor||"Ventas"):null,
+   dias:[{d:"12 nov 2026",canal:S.canal,txt:`${p} en ${LV("ciudad")}, ${LV("pais")}. Solicitud: ${LV("solicitud").toLowerCase()}. Interés en ${LV("linea").toLowerCase()}. ${lead.asignado?"Derivado a "+lead.asignado+".":"Conversación en curso: el agente está confirmando los datos."}`,int:LV("solicitud"),sent:sc===1?"Muy interesado 🔥":"Positivo 😊"}],
+   conv:transcript,notas:[{who:"Agente HILO",t:"12 nov · 12:05",txt:["Tienda con interés en surtir. Confirmar condiciones de compra y tallas con el distribuidor.","Prospecto de distribución con alto potencial: pedido inicial de ~600 unidades. Priorizar respuesta de Ventas.","Consumidora que llegó por una publicación de Instagram. Buena candidata para la campaña de fin de año."][sc]}],tasks:!lead.asignado?[{t:"Completar datos y enrutar el contacto (lo hace el agente)",due:"12 nov · 12:10 · Agente",done:false}]:lead.asignado?(matriz?[{t:"Contactar prospecto y enviar propuesta",due:"13 nov · 12:00 · Ventas",done:false}]:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:"14 nov · 12:10 · Agente",done:false}]):[],
+   route:lead.asignado?[{t:"12 nov · 12:10",txt:$("ruleTxt").textContent}]:[{t:"12 nov · en curso",txt:"Regla sugerida → "+LIVE_DEF[sc].asignado+" (se confirma al cerrar la conversación)"}]};
 }
 /* tabla con nombre y clic a la ficha */
 function renderRows(extra){
@@ -806,7 +1010,7 @@ $("tagForm").onsubmit=e=>{e.preventDefault();const v=$("tagIn").value.trim();if(
 $("noteForm").onsubmit=e=>{e.preventDefault();const v=$("noteIn").value.trim();if(!v)return;curFicha.notas.unshift({who:"Tú · Jean Center",t:"ahora",txt:v});$("noteIn").value="";renderNotes()};
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));["res","conv","act","notes"].forEach(x=>$("t-"+x).hidden=x!==t.dataset.tab)});
 $("fStatus").onchange=e=>{curFicha.estado=e.target.value;$("fToast").textContent=`Estado actualizado a "${e.target.value}". Queda registrado en la actividad.`};
-$("fWrite").onclick=()=>{$("fToast").textContent="Se abre el chat en la bandeja de Botmaker y el agente se pausa mientras respondes."};
+$("fWrite").onclick=()=>{$("fToast").textContent="Se abre el chat en la bandeja de Kaname Chat y el agente se pausa mientras respondes."};
 $("fReassign").onclick=()=>{$("fToast").textContent="Reasignar: elige otro distribuidor del directorio o un asesor de Ventas (simulado en el demo)."};
 /* botón en "Contacto en curso" */
 document.querySelector("#v-contactos .grid2 .box h3").insertAdjacentHTML("beforeend",'<button type="button" class="linkbtn" id="liveOpen" style="margin-left:auto;margin-right:8px">Ver ficha completa →</button>');
@@ -820,10 +1024,10 @@ const INTERES={
  s2:{motivo:"Surtir su tienda",deseo:"Probar la línea fit en volumen pequeño en su tienda de San Pedro Sula antes de comprometer un pedido mayor.",urg:"Media",prods:[["Línea Fit · dama","Tallas 26–34 · azul claro y negro","~80 unidades / mes"]]},
  s3:{motivo:"Compra personal",deseo:"Comprar un jean clásico en talla 32 en Ciudad de Panamá.",urg:"Baja",prods:[["Jean clásico · caballero","Azul oscuro · talla 32","1 unidad"]]}
 };
-function liveInteres(){const l=lead.linea||"Por definir";
-  if(sc===1) return {motivo:"Quiere distribuir la marca en Chile",deseo:"Traer la marca a Chile como distribuidor mayorista para sus 3 tiendas, con un pedido inicial de unas 600 unidades.",urg:"Alta",prods:[[l,"Surtido de tallas","~600 unidades (pedido inicial)"]]};
-  if(sc===2) return {motivo:"Compra personal",deseo:`Comprar el ${l.toLowerCase()} que vio en Instagram en una tienda de ${lead.ciudad||"su ciudad"}.`,urg:"Media",prods:[[l+" · dama","Visto en publicación de Instagram","1–2 unidades"]]};
-  return {motivo:(lead.solicitud||"Información")+" para su tienda",deseo:`Conocer la línea ${l.toLowerCase()} y surtir su tienda de ${lead.ciudad||"Guatemala"} (${(lead.venta||"").toLowerCase()}).`,urg:"Media",prods:[[l,"Surtido para tienda","Cantidad a definir con la tienda"]]};
+function liveInteres(){const l=LV("linea");
+  if(sc===1) return {motivo:`Quiere distribuir la marca en ${LV("pais")}`,deseo:`Traer la marca a ${LV("pais")} como distribuidor mayorista para sus tiendas, con un pedido inicial de unas 600 unidades.`,urg:"Alta",prods:[[l,"Surtido de tallas","~600 unidades (pedido inicial)"]]};
+  if(sc===2) return {motivo:"Compra personal",deseo:`Comprar el ${l.toLowerCase()} que vio en Instagram en una tienda de ${LV("ciudad")}.`,urg:"Media",prods:[[l+" · dama","Visto en publicación de Instagram","1–2 unidades"]]};
+  return {motivo:LV("solicitud")+" para su tienda",deseo:`Conocer la línea ${l.toLowerCase()} y surtir su tienda de ${LV("ciudad")} (venta ${LV("venta").toLowerCase()}).`,urg:"Media",prods:[[l,"Surtido de tallas 28 a 36","~60 unidades / mes (estimado)"]]};
 }
 /* insertar sección de interés en la ficha */
 document.querySelector("#v-ficha .f-grid > section.f-col").insertAdjacentHTML("afterbegin",`<div class="box int"><h3>Interés y motivo del contacto <span class="pill" id="iUrg"></span></h3>
@@ -850,14 +1054,14 @@ function distContacts(i){
   const d=DIST[i], n=Math.min(d[4],8), out=[];
   const link={"Punto Favorito":"s0","LoMax":"s2"}[d[0]];
   if(link) out.push({id:link,nm:FICHAS[link].nombre,fecha:"12 nov",perfil:FICHAS[link].perfil,int:FICHAS[link].lineas,st:FICHAS[link].estado});
-  if(lead.asignado===d[0]) out.unshift({id:"live",nm:LIVE_NAMES[sc][0],fecha:"12 nov",perfil:sc===2?"Consumidor":"Tienda",int:lead.linea,st:$("status").textContent});
+  if(lead.asignado===d[0]) out.unshift({id:"live",nm:LIVE_NAMES[sc][0],fecha:"12 nov",perfil:sc===2?"Consumidor":"Tienda",int:LV("linea"),st:$("status").textContent});
   for(let k=0;out.length<n;k++){
     const id=`g${i}_${k}`, nm=NOMBRES[(i*3+k)%NOMBRES.length], perfil=k%3===0?"Tienda":"Consumidor", ln=LINEAS[(i+k)%3];
     const bad=(100-d[5])/100, r=((i*7+k*13)%100)/100;
     const st=r<bad?(d[5]<70?"Escalado a Casa Matriz":"Pendiente"):"Atendido";
     const day=11-k;
     out.push({id,nm,fecha:`${day} nov`,perfil,int:ln,st});
-    if(!GEN[id]) GEN[id]={ficha:{nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),canal:["WhatsApp","Instagram","Messenger"][k%3],tel:"+"+CC[d[1]]+" •••• "+(1000+k*137),correo:"—",pais:d[1],ciudad:d[2],perfil,tienda:perfil==="Tienda"?"Sí":"No",venta:perfil==="Tienda"?"Al detal":"—",origen:["WhatsApp","Instagram","Messenger"][k%3],primera:`${day} nov 2026`,idioma:"Español",
+    if(!GEN[id]) GEN[id]={ficha:{nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),canal:["WhatsApp","Instagram","Messenger"][k%3],tel:"+"+CC[d[1]]+" •••• "+(1000+k*137),correo:nm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(" ",".").replace(/ /g,"")+"@correo.com",pais:d[1],ciudad:d[2],perfil,tienda:perfil==="Tienda"?"Sí":"No",venta:perfil==="Tienda"?"Al detal":"No aplica · compra personal",origen:["WhatsApp","Instagram","Messenger"][k%3],primera:`${day} nov 2026`,idioma:"Español",
       tags:[perfil,ln,d[1]],potencial:perfil==="Tienda"?"Medio":"Bajo",volumen:perfil==="Tienda"?"~40 unidades / mes":"Compra personal",lineas:ln,
       estado:st,asignado:st.startsWith("Escalado")?"Ventas Casa Matriz":d[0],asigTipo:st.startsWith("Escalado")?"matriz":"dist",rate:d[5],resp:"Carlos M. (Ventas)",
       dias:[{d:`${day} nov 2026`,canal:"WhatsApp",txt:`${perfil} en ${d[2]} interesado en ${ln.toLowerCase()}. Referido a ${d[0]}.`,int:perfil==="Tienda"?"Información de producto":"Dónde comprar",sent:"Positivo 😊"}],
@@ -917,7 +1121,7 @@ function renderDistContacts(){
   $("dFilt").querySelectorAll("button").forEach(b=>b.onclick=()=>{dFilter=b.textContent;renderDistContacts()});
   const shown=list.filter(c=>dFilter==="Todos"||c.st===dFilter);
   $("dCount").textContent=`Mostrando ${shown.length} de ${d[4]} este mes`;
-  $("dRows").innerHTML=shown.map(c=>`<tr class="click" data-id="${c.id}" tabindex="0"><td><span class="nm">${c.nm}</span></td><td>${c.fecha}</td><td>${c.perfil}</td><td>${c.int||"—"}</td><td><span class="pill ${stCls(c.st)}">${c.st}</span></td><td><button type="button" class="linkbtn">Ver ficha →</button></td></tr>`).join("");
+  $("dRows").innerHTML=shown.map(c=>`<tr class="click" data-id="${c.id}" tabindex="0"><td><span class="nm">${c.nm}</span></td><td>${c.fecha}</td><td>${c.perfil}</td><td>${c.int||"Información general"}</td><td><span class="pill ${stCls(c.st)}">${c.st}</span></td><td><button type="button" class="linkbtn">Ver ficha →</button></td></tr>`).join("");
   $("dRows").querySelectorAll("tr").forEach(tr=>{const go=()=>{backTo={name:DIST[curDist][0],i:curDist};openFicha(tr.dataset.id)};tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter")go()}});
 }
 function showView(v){document.body.classList.toggle("wide",v==="ficha"||v==="distdet");
@@ -933,9 +1137,97 @@ $("rows").addEventListener("click",()=>{backTo=null},true);
 renderDist();
 $("liveOpen").onclick=()=>{backTo=null;openFicha("live")};
 
+/* ===== Ventas · SLA (cifras simuladas) ===== */
+const SLA_ROWS=[
+ ["Carlos Méndez","Centroamérica y Panamá",24,"2 h 50 min",92,0,6,7,4],
+ ["Laura Pérez","Venezuela, Colombia y Caribe",21,"3 h 35 min",86,1,5,5,3],
+ ["Diego Rojas","Expansión: Chile, Perú y México",13,"5 h 40 min",77,2,4,2,1]];
+const OPEN_CASES=[
+ ["Roberto Garza · Boutique Norte","México","Diego Rojas","12 nov 11:40","13 nov 11:40","En plazo","p-ok"],
+ ["Importadora Andina","Perú","Diego Rojas","11 nov 16:05","12 nov 16:05","Vencido","p-wait"],
+ ["Moda Express PTY","Panamá","Carlos Méndez","12 nov 09:20","13 nov 09:20","Por vencer","p-ref"],
+ ["Distribuidora Oriente","Venezuela","Laura Pérez","12 nov 10:02","13 nov 10:02","En plazo","p-ok"]];
+function renderSla(){
+  $("slaRows").innerHTML=SLA_ROWS.map(r=>{const cierre=Math.round(r[7]/r[2]*100);return `<tr><td><b>${r[0]}</b><br><span class="ex" style="font-style:normal">${r[1]}</span></td><td class="r">${r[2]}</td><td>${r[3]}</td><td>${rateBar(r[4])}</td><td class="r">${r[5]?`<span class="pill p-wait">${r[5]}</span>`:"0"}</td><td class="r">${r[6]}</td><td class="r">${r[7]}</td><td class="r">${r[8]}</td><td class="r"><b>${cierre}%</b></td></tr>`}).join("");
+  const live=(caseState==="matriz"||caseState==="taken")&&lead.vendedor?[[LIVE_NAMES[sc][0],lead.pais,lead.vendedor,"12 nov 12:10","13 nov 12:10",caseState==="taken"?"Cumplido · 1 h 12 min":"En plazo",caseState==="taken"?"p-ok":"p-new"]]:[];
+  $("openRows").innerHTML=live.concat(OPEN_CASES).map((r,i)=>`<tr class="${live.length&&i===0?"new":""}"><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td><span class="pill ${r[6]}">${r[5]}</span></td></tr>`).join("");
+}
+function showView(v){document.body.classList.toggle("wide",v==="ficha"||v==="distdet"||v==="sla");
+  ["contactos","dist","rep","ficha","distdet","sla"].forEach(x=>$("v-"+x).hidden=x!==v);
+  const nav=v==="ficha"?(backTo?"dist":"contactos"):v==="distdet"?"dist":v;
+  document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("on",x.dataset.view===nav));document.querySelector(".k-main").scrollTop=0;
+  if(v==="sla") renderSla();}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{backTo=null;showView(b.dataset.view)});
+
+
+/* ===== Gancho de portada ===== */
 let started=false;
-$("goDemo").onclick=()=>{$("cover").hidden=true;window.scrollTo(0,0);if(!started){started=true;start()}};
-$("home").onclick=()=>{$("cover").hidden=false};
+const HK={timers:[],clock:null};
+function hkClear(){HK.timers.forEach(clearTimeout);HK.timers=[];if(HK.clock){cancelAnimationFrame(HK.clock);HK.clock=null}}
+function hkAt(ms,fn){HK.timers.push(setTimeout(fn,ms))}
+function hkPane(n){[1,2,3].forEach(i=>{$("hkP"+i).hidden=i!==n});document.querySelectorAll(".hk-nav [data-pane]").forEach(b=>b.classList.toggle("on",+b.dataset.pane===n));if(n===1)hkPlayLost();else hkClear();$("cover").scrollTop=0}
+function hkAdd(html){const c=$("hkChat");c.insertAdjacentHTML("beforeend",html);c.scrollTop=c.scrollHeight}
+function hkMe(t,h,read){return `<div class="hk-b me">${t}<small>${h} <span class="tk${read?" read":""}">✓✓</span></small></div>`}
+function hkBot(t,h){return `<div class="hk-b bot">${t}<small>${h}</small></div>`}
+function hkCount(from,to,ms,fmt){const t0=performance.now();const step=t=>{const p=Math.min(1,(t-t0)/ms);$("hkHours").textContent=fmt(from+(to-from)*p);if(p<1)HK.clock=requestAnimationFrame(step)};HK.clock=requestAnimationFrame(step)}
+function hkReset(){hkClear();$("hkChat").innerHTML="";$("hkQuote").classList.remove("show");$("hkBtns").classList.remove("show")}
+function hkPlayLost(){
+  hkReset();
+  $("hkClock").className="hk-clock";$("hkClock").firstChild.textContent="⏱ Sin respuesta: ";$("hkHours").textContent="0 h";
+  $("hkStatus").textContent="últ. vez hace 3 días";
+  $("hkTag").textContent="Caso ilustrativo · un distribuidor en Santiago de Chile";
+  $("hkTitle").innerHTML="Este cliente existía.<br><em>Nadie le contestó.</em>";
+  $("hkLead").textContent="Tres tiendas, ganas de vender la marca y tres mensajes en tres días. El viernes ya le compraba a otra.";
+  $("hkRewind").hidden=false;
+  const fmt=v=>Math.round(v)+" h";
+  hkAt(300,()=>hkAdd('<div class="hk-day">MARTES</div>'));
+  hkAt(700,()=>hkAdd(hkMe("Hola, tengo 3 tiendas en Santiago y quiero vender su marca. ¿Con quién hablo?","9:14")));
+  hkAt(1300,()=>hkCount(0,33,1500,fmt));
+  hkAt(2900,()=>hkAdd('<div class="hk-day">MIÉRCOLES</div>'));
+  hkAt(3300,()=>hkAdd(hkMe("¿Hola? Sigo interesado. ¿Me pueden enviar la información para distribuidores?","18:40")));
+  hkAt(3900,()=>hkCount(33,74,1800,fmt));
+  hkAt(5800,()=>hkAdd('<div class="hk-day">VIERNES</div>'));
+  hkAt(6200,()=>hkAdd(hkMe("Ya cerré con otra marca. Gracias igual.","11:02")));
+  hkAt(7000,()=>$("hkQuote").classList.add("show"));
+  hkAt(7700,()=>$("hkBtns").classList.add("show"));
+}
+function hkPlayHilo(){
+  hkReset();
+  $("hkClock").className="hk-clock ok";$("hkClock").firstChild.textContent="⚡ Respondido en ";$("hkHours").textContent="…";
+  $("hkStatus").textContent="en línea";
+  $("hkTag").textContent="El mismo mensaje · con HILO";
+  $("hkTitle").innerHTML="El mismo cliente.<br><em>Atendido en 8&nbsp;segundos.</em>";
+  $("hkLead").textContent="HILO responde, entiende que es un distribuidor en Chile, lo registra en Kaname y se lo asigna a Ventas de Casa Matriz con un plazo de respuesta medido.";
+  $("hkRewind").hidden=true;
+  hkAt(300,()=>hkAdd('<div class="hk-day">MARTES</div>'));
+  hkAt(700,()=>hkAdd(hkMe("Hola, tengo 3 tiendas en Santiago y quiero vender su marca. ¿Con quién hablo?","9:14",true)));
+  hkAt(1700,()=>{hkAdd(hkBot("¡Hola! Soy el asistente de Jean Center 👋 Qué buena noticia. Para conectarte con la persona indicada, ¿me dices tu nombre y el de tu empresa?","9:14"));$("hkHours").textContent="8 segundos"});
+  hkAt(3000,()=>hkAdd(hkMe("Andrés Soto, Tiendas Andes","9:15",true)));
+  hkAt(4100,()=>hkAdd(hkBot("Gracias, Andrés. Para distribuir en Chile te atiende directamente Ventas de Casa Matriz, en Panamá. <b>Diego Rojas</b> ya tiene tu caso y te escribe hoy.","9:15")));
+  hkAt(5200,()=>hkAdd('<div class="hk-sys">Kaname · contacto registrado · asignado a Diego Rojas · plazo de respuesta 24 h</div>'));
+  hkAt(6000,()=>{$("hkQuote").classList.add("show");$("hkBtns").classList.add("show")});
+}
+$("hkRewind").onclick=hkPlayHilo;
+document.querySelectorAll(".hk-nav [data-pane]").forEach(b=>b.onclick=()=>hkPane(+b.dataset.pane));
+document.querySelectorAll("#cover [data-go]").forEach(b=>b.onclick=()=>hkPane(+b.dataset.go));
+const fmtUSD=n=>"$"+Math.round(n).toLocaleString("es-PA").replace(/,/g,".");
+const fmtN=n=>Math.round(n).toLocaleString("es-PA").replace(/,/g,".");
+function calc(){
+  const m=+$("cMsgN").value||0,l=+$("cLostN").value||0,c=+$("cConvN").value||0,t=+$("cTicketN").value||0;
+  const lostOrders=m*30*(l/100)*(c/100),month=lostOrders*t;
+  $("cMonth").textContent=fmtUSD(month);$("cYear").textContent=fmtUSD(month*12);$("cOrders").textContent=fmtN(lostOrders);
+  $("cFormula").textContent=`${fmtN(m*30)} mensajes al mes × ${l}% sin respuesta × ${c}% que habría comprado × ${fmtUSD(t)}`;
+}
+[["cMsg","cMsgN"],["cLost","cLostN"],["cConv","cConvN"],["cTicket","cTicketN"]].forEach(([r,n])=>{
+  $(r).oninput=()=>{$(n).value=$(r).value;calc()};
+  $(n).oninput=()=>{$(r).value=$(n).value;calc()};
+});
+calc();
+function hkStartDemo(){hkClear();$("cover").hidden=true;window.scrollTo(0,0);if(!started){started=true;start()}}
+$("goDemo").onclick=hkStartDemo;
+$("hkSkip").onclick=hkStartDemo;
+$("home").onclick=()=>{$("cover").hidden=false;hkPane(1)};
+hkPlayLost();
 </script>
 </body>
 </html>
