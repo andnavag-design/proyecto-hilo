@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo HILO · Jean Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Pulse DS. Layout: barra superior → pantalla dividida (chat WhatsApp | Kaname) → "lo que el bot hace por dentro" */
+  --navy:#0D1B2A; --purple:#833AE0; --magenta:#CB6CE6; --slate:#4A4E69; --cloud:#F5F6F8;
+  --bg:#EEF0F5; --surface:#FFFFFF; --ink:#0D1B2A; --muted:#5A5E78; --line:#E2E8F0; --soft:#F3EBF9;
+  --ok:#16A34A; --warn:#D97706; --info:#2563EB;
+  --wa-bg:#EFE7DD; --wa-in:#FFFFFF; --wa-out:#D9FDD3; --wa-head:#075E54; --wa-btn:#027EB5;
+  --display:"Poppins",system-ui,sans-serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 var(--body);min-height:100vh;display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+.top{background:var(--navy);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
+.top img{width:34px;height:34px;border-radius:8px}
+.brand{display:flex;flex-direction:column;line-height:1.2}
+.brand b{font:700 17px var(--display);letter-spacing:.04em}
+.brand span{font-size:12px;color:#B9BDD0}
+.scenario{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.scenario span{font-size:12px;color:#B9BDD0}
+.chip-btn{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600}
+.chip-btn.on{background:var(--purple);border-color:var(--purple)}
+.chip-btn[disabled]{opacity:.45;cursor:not-allowed}
+.reset{background:var(--magenta);border:0;color:var(--navy);border-radius:8px;padding:7px 14px;font-weight:600;font-size:12px}
+.stage{flex:1;min-height:0;display:grid;grid-template-columns:400px 1fr;gap:18px;padding:18px 20px;max-width:1440px;width:100%;margin:0 auto}
+.label{font:600 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.label i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok)}
+/* Phone */
+.phone-wrap{display:flex;flex-direction:column;min-height:0}
+.phone{height:clamp(560px,calc(100vh - 170px),780px);background:var(--wa-bg);border-radius:26px;border:10px solid #1B1F27;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 40px rgba(13,27,42,.18)}
+.wa-head{background:var(--wa-head);color:#fff;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.avatar{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;font:700 12px var(--display)}
+.wa-head b{display:block;font-size:14px}
+.wa-head small{font-size:11px;opacity:.85}
+.chat{flex:1;overflow-y:auto;padding:12px 10px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth}
+.sys{align-self:center;background:#FFF3C4;color:#54471E;font-size:11px;border-radius:8px;padding:5px 9px;text-align:center;max-width:90%}
+.msg{max-width:86%;padding:7px 9px 5px;border-radius:9px;font-size:13.5px;line-height:1.45;box-shadow:0 1px 1px rgba(0,0,0,.08);white-space:pre-line;animation:pop .18s ease-out}
+.msg.in{align-self:flex-start;background:var(--wa-in);border-top-left-radius:2px}
+.msg.out{align-self:flex-end;background:var(--wa-out);border-top-right-radius:2px}
+.msg time{display:block;text-align:right;font-size:10px;color:#667781;margin-top:2px}
+.msg .ticks{color:#53BDEB}
+.msg b{font-weight:600}
+.card-dist{background:#F7F9FA;border-left:3px solid var(--wa-head);border-radius:6px;padding:7px 9px;margin-top:6px;white-space:normal}
+.card-dist b{display:block}
+.card-dist .link{color:var(--wa-btn);font-weight:600;margin-top:4px;display:block}
+.opts{align-self:flex-start;width:86%;display:flex;flex-direction:column;gap:4px;margin-top:-2px}
+.opt{background:var(--wa-in);border:0;border-radius:9px;color:var(--wa-btn);font-weight:600;font-size:13px;padding:8px;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.opt:hover{background:#F5FAFD}
+.typing{align-self:flex-start;background:var(--wa-in);border-radius:9px;padding:9px 12px;display:flex;gap:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:#9AA5AD;animation:blink 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.wa-input{background:#F0F2F5;padding:8px 10px;display:flex;gap:8px;align-items:center}
+.wa-input div{flex:1;background:#fff;border-radius:20px;padding:8px 12px;color:#8696A0;font-size:13px}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+@keyframes pop{from{transform:translateY(4px);opacity:0}to{transform:none;opacity:1}}
+@keyframes blink{50%{opacity:.3}}
+/* Kaname */
+.kaname{display:flex;flex-direction:column;min-height:0;gap:14px}
+.k-shell{flex:1;min-height:560px;max-height:calc(100vh - 230px);background:var(--surface);border:1px solid var(--line);border-radius:14px;display:grid;grid-template-columns:180px 1fr;overflow:hidden;box-shadow:0 4px 8px rgba(0,0,0,.05)}
+.k-side{background:var(--cloud);border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.k-logo{font:700 18px var(--display);margin:0 6px 14px}
+.k-logo b{color:var(--purple)} .k-logo i{font-style:italic;color:var(--navy)}
+.k-nav{background:none;border:0;text-align:left;width:100%;padding:8px 10px;border-radius:8px;color:var(--slate);font-weight:500;font-size:13px;display:flex;justify-content:space-between}
+button.k-nav:hover{background:#ECE6F7}
+.k-nav.on{background:var(--soft);color:var(--purple);font-weight:600}
+.k-nav em{font-style:normal;background:var(--magenta);color:#fff;border-radius:999px;font-size:11px;padding:0 7px;display:none}
+.k-main{padding:18px 20px;overflow-y:auto}
+.view{display:flex;flex-direction:column;gap:16px}
+.view[hidden]{display:none}
+.k-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.k-head h2{font:600 19px var(--display);margin:0}
+.k-head p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi b{font:700 20px var(--display);font-variant-numeric:tabular-nums;display:block}
+.kpi span{font-size:12px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.box h3{font:600 14px var(--display);margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.f{display:flex;flex-direction:column;gap:1px;min-width:0}
+.f span{font-size:11px;color:var(--muted)}
+.f b{font-weight:600;font-size:13px;min-height:20px;overflow-wrap:anywhere}
+.f b.empty{color:#B8BCCB;font-weight:400}
+.f.flash b{animation:flash 1.2s ease-out}
+@keyframes flash{0%{background:var(--soft);color:var(--purple)}100%{background:transparent}}
+.pill{font-size:11px;font-weight:600;border-radius:999px;padding:3px 10px;white-space:nowrap;border:1px solid currentColor}
+.p-new{color:var(--info)} .p-ref{color:var(--purple)} .p-ok{color:var(--ok)} .p-wait{color:var(--warn)} .p-none{color:#9AA0B4}
+.route{background:var(--cloud);border-radius:10px;padding:10px 12px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.route[hidden]{display:none}
+.stage>*,.k-main,.box{min-width:0}
+.route .rule{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--slate)}
+.route b{color:var(--purple)}
+.timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto}
+.timeline li{display:grid;grid-template-columns:44px 1fr;gap:8px;font-size:12.5px;animation:pop .2s ease-out}
+.timeline time{color:var(--muted);font-variant-numeric:tabular-nums}
+.timeline li span b{font-weight:600}
+.tag{display:inline-block;font-size:10.5px;font-weight:600;background:var(--soft);color:var(--purple);border-radius:5px;padding:0 6px;margin-left:4px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+td{padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+tr.new td{background:var(--soft);animation:pop .3s ease-out}
+.ex{font-size:11px;color:var(--muted);font-style:italic}
+.email{border:1px dashed var(--purple);border-radius:10px;padding:12px;font-size:12.5px;display:none;flex-direction:column;gap:6px;background:#FCFAFF}
+.email.show{display:flex;animation:pop .25s ease-out}
+.email .h{font-size:11.5px;color:var(--muted)}
+.next{align-self:center;background:var(--navy);color:#fff;border:0;border-radius:999px;padding:7px 14px;font-weight:600;font-size:12px;margin:6px 0}
+.email .btn{align-self:flex-start;background:var(--purple);color:#fff;border-radius:7px;padding:6px 12px;font-weight:600;font-size:12px;border:0}
+.inside{background:var(--navy);color:#DDE1EC;border-radius:12px;padding:12px 16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.inside .label{color:#9EA3BC;margin:0 6px 0 0}
+.piece{font-size:12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px 10px;transition:all .2s}
+.piece.on{background:var(--magenta);border-color:var(--magenta);color:var(--navy);font-weight:600}
+footer{font-size:11.5px;color:var(--muted);text-align:center;padding:4px 20px 14px}
+@media (max-width:1100px){.grid2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:900px){.stage{grid-template-columns:1fr;flex:none}.phone{height:620px}.k-shell{grid-template-columns:1fr;max-height:none;min-height:0}.k-side{display:none}.k-main{overflow:visible}.inside{position:static}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+th.r,td.r{text-align:right}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.fbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:500;color:var(--slate)}
+.fbtn.on{background:var(--purple);border-color:var(--purple);color:#fff}
+.rate{display:flex;align-items:center;gap:8px;min-width:120px}
+.rate .track{flex:1;height:7px;background:var(--cloud);border-radius:4px;overflow:hidden}
+.rate .fill{height:100%;border-radius:4px}
+.rate span{font-variant-numeric:tabular-nums;font-weight:600;width:36px;text-align:right}
+.pc{color:#B26A00;font-weight:600}
+.sim{margin:0;font-size:12px;color:#7A4B00;background:#FFF6E5;border:1px solid #F5D9A8;border-radius:8px;padding:7px 10px}
+.note2{margin:0;font-size:12.5px;color:var(--muted)}
+.exp{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.exp div{border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.exp b{font:600 14px var(--display)}
+.exp span{font-size:12px;color:var(--muted)}
+.kpi em{display:block;font-style:normal;font-size:11px;color:var(--muted)}
+.kpi em.up{color:var(--ok);font-weight:600}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar-row{display:grid;grid-template-columns:120px 1fr 44px;align-items:center;gap:10px;font-size:12.5px}
+.bar-row .track{height:14px;background:var(--cloud);border-radius:4px;overflow:hidden}
+.bar-row .fill{height:100%;background:var(--purple);border-radius:4px}
+.bar-row .fill.alt{background:var(--magenta)}
+.bar-row b{text-align:right;font-variant-numeric:tabular-nums}
+.stack{display:flex;height:22px;border-radius:6px;overflow:hidden}
+.stack div{height:100%}
+.legend2{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.legend2 li{display:flex;align-items:center;gap:8px}
+.legend2 i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend2 b{margin-left:auto;font-variant-numeric:tabular-nums}
+.insights{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover td{background:#F8F5FD}
+td .nm{font-weight:600}
+.linkbtn{background:none;border:0;color:var(--purple);font-weight:600;font-size:12px;padding:0}
+.back{background:none;border:0;color:var(--purple);font-weight:600;padding:0;font-size:13px}
+.f-hero{display:flex;gap:14px;align-items:center;flex-wrap:wrap;border:1px solid var(--line);border-radius:12px;padding:14px}
+.f-av{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--magenta));color:#fff;display:grid;place-items:center;font:700 18px var(--display);flex:none}
+.f-id{flex:1;min-width:200px}
+.f-id h2{font:600 19px var(--display);margin:0}
+.f-id p{margin:2px 0 6px;color:var(--muted);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:11.5px;background:var(--cloud);border-radius:6px;padding:2px 8px;color:var(--slate)}
+.f-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+select{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--surface);color:var(--ink)}
+.act{border:1px solid var(--purple);color:var(--purple);background:transparent;border-radius:8px;padding:7px 12px;font-weight:600;font-size:12.5px}
+.act.primary{background:var(--purple);color:#fff}
+.toast{margin:0;font-size:12.5px;color:var(--ok);min-height:0}
+.f-grid{display:grid;grid-template-columns:240px minmax(0,1fr) 260px;gap:14px;align-items:start}
+.f-col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.dl{display:grid;grid-template-columns:1fr;gap:0;margin:0;font-size:12.5px}
+.dl dt{margin-top:7px}
+.dl dt:first-child{margin-top:0}
+body.wide .stage{grid-template-columns:1fr}
+body.wide .phone-wrap{display:none}
+body.wide .k-shell{max-height:none}
+.dl dt{color:var(--muted)}
+.dl dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.dl dd .ok{color:var(--ok)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tg{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;background:var(--soft);color:var(--purple);border-radius:999px;padding:3px 4px 3px 10px}
+.tg button{border:0;background:transparent;color:var(--purple);font-size:13px;line-height:1;padding:0 5px;border-radius:50%}
+.tg button:hover{background:#E5D8F6}
+.inline input,.noteform textarea{width:100%;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:var(--bg);color:var(--ink)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-4px -4px 0;flex-wrap:wrap}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:8px 10px;font-weight:600;font-size:13px;color:var(--muted)}
+.tab.on{color:var(--purple);border-bottom-color:var(--purple)}
+.tab em{font-style:normal;background:var(--soft);color:var(--purple);border-radius:999px;font-size:11px;padding:0 6px}
+.tabp{display:flex;flex-direction:column;gap:12px;padding-top:4px}
+.tabp[hidden]{display:none}
+.day{border-left:3px solid var(--purple);padding:2px 0 2px 12px;display:flex;flex-direction:column;gap:6px}
+.day h4{margin:0;font:600 13px var(--display);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.day p{margin:0;font-size:13px}
+.day .meta{display:flex;flex-wrap:wrap;gap:6px}
+.day .meta span{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:1px 7px;color:var(--slate)}
+.conv{background:var(--wa-bg);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:5px;max-height:420px;overflow-y:auto}
+.conv .msg{max-width:80%}
+.conv .sys{font-size:10.5px}
+.notes{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.notes li{border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+.notes .who{font-size:11.5px;color:var(--muted)}
+.notes .who b{color:var(--ink)}
+.mention{color:var(--purple);font-weight:600}
+.noteform{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.assign{display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.assign b{font:600 14px var(--display)}
+.tasks,.route-h{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:12.5px}
+.tasks li{display:flex;gap:8px;align-items:flex-start}
+.tasks input{margin-top:3px;accent-color:var(--purple)}
+.tasks small,.route-h small{display:block;color:var(--muted)}
+.tasks li.done span{text-decoration:line-through;color:var(--muted)}
+.route-h li{border-left:2px solid var(--line);padding-left:10px}
+@media (max-width:1250px){.f-grid{grid-template-columns:240px minmax(0,1fr)}.f-grid>.f-col:last-child{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}}
+@media (max-width:900px){.f-grid{grid-template-columns:1fr}}
+
+.int .k{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:3px}
+.int-top{display:grid;grid-template-columns:200px 1fr;gap:14px}
+.int-top b{font:600 14px var(--display)}
+.int-top p{margin:0;font-size:13.5px}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.prod{display:flex;gap:10px;border:1px solid var(--line);border-radius:10px;padding:9px 10px;align-items:flex-start}
+.prod .ph{width:38px;height:38px;border-radius:8px;background:var(--soft);display:grid;place-items:center;font-size:18px;flex:none}
+.prod b{display:block;font-size:13px}
+.prod span{display:block;font-size:12px;color:var(--muted)}
+.prod em{display:block;font-style:normal;font-size:12px;font-weight:600;color:var(--purple)}
+@media (max-width:900px){.int-top{grid-template-columns:1fr}}
+
+
+.cover{position:fixed;inset:0;z-index:50;background:radial-gradient(1200px 600px at 85% -10%,rgba(203,108,230,.28),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(131,58,224,.30),transparent 60%),var(--navy);color:#fff;overflow-y:auto;display:flex}
+.cover[hidden]{display:none}
+.cv{margin:auto;max-width:1040px;width:100%;padding:40px 24px;display:flex;flex-direction:column;gap:28px}
+.cv-top{display:flex;align-items:center;gap:12px;color:#B9BDD0;font-size:13px}
+.cv-top img{width:30px;height:30px;border-radius:8px}
+.cv-top .x{margin-left:auto;border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:4px 12px;font-size:12px}
+.cv h1{font:700 64px/1 var(--display);margin:0;letter-spacing:.03em}
+.cv h1 span{display:block;font:500 22px/1.35 var(--display);color:#DADCE6;letter-spacing:0;margin-top:14px;max-width:720px;text-wrap:balance}
+.cv h1 em{font-style:normal;color:var(--magenta)}
+.cv-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.cv-cards div{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:6px}
+.cv-cards b{font:600 16px var(--display)}
+.cv-cards span{font-size:13.5px;color:#C9CCD9}
+.cv-cards i{font-style:normal;font-size:22px}
+.cv-go{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.cv-go button{background:linear-gradient(135deg,var(--purple),var(--magenta));color:#fff;border:0;border-radius:10px;padding:14px 26px;font:600 16px var(--display);box-shadow:0 10px 30px rgba(131,58,224,.45)}
+.cv-go button:hover{filter:brightness(1.1)}
+.cv-go span{font-size:13px;color:#B9BDD0}
+.cv-how{border-top:1px solid rgba(255,255,255,.12);padding-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;font-size:12.5px;color:#C9CCD9;counter-reset:h}
+.cv-how div::before{counter-increment:h;content:counter(h);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--magenta);color:var(--navy);font-weight:700;font-size:11px;margin-right:8px}
+.cv-how b{color:#fff}
+.cv-foot{font-size:12px;color:#8F94AD}
+.home{background:transparent;border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600}
+@media (max-width:820px){.cv h1{font-size:46px}.cv-cards,.cv-how{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="cover" id="cover" role="dialog" aria-label="Portada del demo">
+ <div class="cv">
+  <div class="cv-top"><img alt="HenkanCX" src="data:image/png;base64,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"><span>HenkanCX presenta</span><span class="x">Propuesta para Jean Center · Noviembre 2026</span></div>
+  <h1>Proyecto <em>HILO</em><span>Cada persona que busca la marca, conectada con su distribuidor. En WhatsApp, Instagram, Messenger y chat web, las 24 horas.</span></h1>
+  <div class="cv-cards">
+   <div><i>💬</i><b>Ningún contacto se pierde</b><span>El agente responde al instante, captura los datos clave y registra cada conversación en Kaname.</span></div>
+   <div><i>🧭</i><b>Cada uno a su lugar</b><span>Lo dirige a la tienda autorizada de su ciudad o a Ventas en Casa Matriz (Panamá), y confirma a las 48 horas que fue atendido.</span></div>
+   <div><i>📈</i><b>Visibilidad para decidir</b><span>Directorio con desempeño de cada distribuidor y un reporte semanal de lo que piden y desde dónde.</span></div>
+  </div>
+  <div class="cv-go"><button type="button" id="goDemo">Iniciar demo →</button><span>Prototipo navegable · tiendas reales de Jean Center · cifras simuladas</span></div>
+  <div class="cv-how">
+   <div><b>Elige un caso</b> arriba: tienda, mayorista o consumidor.</div>
+   <div><b>Responde en el chat</b> como si fueras el cliente.</div>
+   <div><b>Mira Kaname</b> registrar y enrutar en tiempo real.</div>
+   <div><b>Explora</b> fichas, distribuidores y el reporte semanal.</div>
+  </div>
+  <p class="cv-foot">HenkanCX · henkancx.com · Transformamos la experiencia del cliente desde el día 1.</p>
+ </div>
+</div>
+<header class="top">
+  <img alt="HenkanCX" src="data:image/png;base64,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">
+  <div class="brand"><b>PROYECTO HILO</b><span>Demo para Jean Center · Casa Matriz Panamá · cifras simuladas</span></div>
+  <div class="scenario" role="group" aria-label="Casos del demo">
+    <span>Caso:</span>
+    <button class="chip-btn on" data-sc="0" type="button">1 · Tienda en Guatemala</button>
+    <button class="chip-btn" data-sc="1" type="button">2 · Mayorista sin distribuidor</button>
+    <button class="chip-btn" data-sc="2" type="button">3 · Consumidora en Venezuela</button>
+    <button class="reset" id="reset" type="button">Reiniciar</button>
+    <button class="home" id="home" type="button">Portada</button>
+  </div>
+</header>
+
+<main class="stage">
+  <section class="phone-wrap" aria-label="Conversación de WhatsApp">
+    <p class="label"><i></i><span>Lo que ve el cliente · WhatsApp</span></p>
+    <div class="phone">
+      <div class="wa-head"><div class="avatar">JC</div><div><b>Jean Center ✓</b><small>Cuenta de empresa · asistente virtual</small></div></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="wa-input"><div>Mensaje</div></div>
+    </div>
+    <p class="hint">Haz clic en las opciones del chat para responder como el cliente.</p>
+  </section>
+
+  <section class="kaname" aria-label="Kaname">
+    <p class="label"><i style="background:var(--purple)"></i>Lo que ve Jean Center · Kaname en tiempo real</p>
+    <div class="k-shell">
+      <nav class="k-side" aria-label="Menú Kaname">
+        <div class="k-logo"><b>K</b><i>aname</i></div>
+        <button type="button" class="k-nav on" data-view="contactos">Contactos <em id="badge">1</em></button>
+        <button type="button" class="k-nav" data-view="dist">Distribuidores</button>
+        <button type="button" class="k-nav" data-view="rep">Reporte semanal</button>
+        <div class="k-nav" style="opacity:.55">Configuración</div>
+      </nav>
+      <div class="k-main">
+<div class="view" id="v-contactos">
+        <div class="k-head">
+          <div><h2>Contactos</h2><p>Todos los canales · hoy, 12 de noviembre</p></div>
+          <span class="ex">Tiendas reales · cifras simuladas</span>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><b id="kpiTotal">14</b><span>Contactos hoy</span></div>
+          <div class="kpi"><b id="kpiRef">9</b><span>Referidos a distribuidor</span></div>
+          <div class="kpi"><b id="kpiMat">3</b><span>En Casa Matriz</span></div>
+          <div class="kpi"><b>100%</b><span>Respondidos por el agente</span></div>
+        </div>
+        <div class="grid2">
+          <div class="box">
+            <h3>Contacto en curso <span class="pill p-none" id="status">Esperando mensaje</span></h3>
+            <div class="fields" id="fields"></div>
+            <div class="route" id="route" hidden>
+              <span class="rule" id="ruleTxt"></span>
+              <span id="routeTxt"></span>
+            </div>
+            <div class="email" id="email">
+              <span class="h" id="emailHead"></span>
+              <span id="emailHello"></span>
+              <span id="emailBody"></span>
+              <button class="btn" type="button" id="attended">Marcar como atendido</button>
+            </div>
+          </div>
+          <div class="box">
+            <h3>Actividad</h3>
+            <ul class="timeline" id="timeline"></ul>
+          </div>
+        </div>
+        <div class="box">
+          <h3>Últimos contactos <span class="ex">Tiendas reales · cifras simuladas</span></h3>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Hora</th><th>Canal</th><th>País · Ciudad</th><th>Perfil</th><th>Solicitud</th><th>Asignado a</th><th>Estado</th></tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+<div class="view" id="v-dist" hidden>
+  <div class="k-head">
+    <div><h2>Directorio de tiendas y distribuidores</h2><p>Red de detal 2025 de Jean Center · Casa Matriz en Panamá · administrable por Jean Center</p></div>
+    <span class="ex">Tiendas reales · cifras simuladas</span>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><b>32</b><span>Tiendas en la red de detal</span></div>
+    <div class="kpi"><b>7</b><span>Países con cobertura · Casa Matriz en Panamá</span></div>
+    <div class="kpi"><b>87%</b><span>Tasa de respuesta promedio (simulada)</span></div>
+    <div class="kpi"><b>3</b><span>Países sin tiendas que preguntan</span></div>
+  </div>
+  <div class="box">
+    <h3>Red de tiendas <span class="ex">Clic en un país para filtrar · clic en una tienda para entrar</span></h3>
+    <p class="sim">Nombres e Instagram: tiendas reales de Jean Center. Ciudades, contactos, teléfonos, correos, tasas de respuesta y tiempos son <b>simulados</b> para el demo.</p>
+    <div class="filters" id="distFilters"></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>Tienda</th><th>País · Ciudad</th><th>Venta</th><th class="r">Contactos</th><th>Respuesta</th><th>Estado</th></tr></thead><tbody id="distRows"></tbody></table></div>
+  </div>
+  <div class="box gap">
+    <h3>Oportunidades de expansión <span class="pill p-wait">Sin tiendas</span></h3>
+    <p class="note2">Países desde donde escriben prospectos y Jean Center aún no tiene tiendas. Estos contactos van a Ventas Casa Matriz en Panamá.</p>
+    <div class="exp" id="expansion"></div>
+  </div>
+</div>
+
+<div class="view" id="v-rep" hidden>
+  <div class="k-head">
+    <div><h2>Reporte semanal</h2><p>Semana del 2 al 8 de noviembre de 2026 · se envía cada lunes a Marketing y Ventas</p></div>
+    <span class="ex">Tiendas reales · cifras simuladas</span>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><b>212</b><span>Contactos <em class="up">▲ 18% vs. semana anterior</em></span></div>
+    <div class="kpi"><b>100%</b><span>Respondidos por el agente <em>en menos de 10 s</em></span></div>
+    <div class="kpi"><b>91%</b><span>Atendidos por distribuidor o Ventas <em>confirmado en seguimiento</em></span></div>
+    <div class="kpi"><b>17</b><span>Oportunidades mayoristas <em>enviadas a Casa Matriz</em></span></div>
+  </div>
+  <div class="grid2">
+    <div class="box"><h3>Contactos por canal</h3><div class="bars" id="bCanal"></div></div>
+    <div class="box"><h3>Contactos por país <span class="ex">Top 6</span></h3><div class="bars" id="bPais"></div></div>
+  </div>
+  <div class="grid2">
+    <div class="box"><h3>Líneas más buscadas</h3><div class="bars" id="bLinea"></div></div>
+    <div class="box"><h3>Perfil de quien escribe</h3><div class="stack" id="perfil"></div><ul class="legend2" id="perfilLeg"></ul></div>
+  </div>
+  <div class="box">
+    <h3>Hallazgos de la semana</h3>
+    <ul class="insights">
+      <li><b>Venezuela</b> concentra el 39% de los contactos de la semana; Caracas aporta más de la mitad.</li>
+      <li><b>Fit / ajustado</b> superó a jean clásico en Venezuela y Costa Rica; el 70% de esas consultas llegó por Instagram.</li>
+      <li><b>Chile</b> acumula 9 consultas mayoristas en 3 semanas y no tiene tiendas. Oportunidad de expansión para Ventas en Casa Matriz.</li>
+      <li><b>LoMax (Honduras)</b> respondió solo 6 de 11 contactos esta semana. 5 casos se escalaron a Casa Matriz. <span class="ex">(cifra simulada)</span></li>
+    </ul>
+  </div>
+</div>
+<div class="view" id="v-ficha" hidden>
+  <div class="k-head">
+    <button type="button" class="back" id="fBack">← Volver a contactos y al chat</button>
+    <span class="ex">Tiendas reales · cifras simuladas</span>
+  </div>
+  <div class="f-hero">
+    <div class="f-av" id="fAv">LM</div>
+    <div class="f-id">
+      <h2 id="fName">—</h2>
+      <p id="fSub">—</p>
+      <div class="chips" id="fChips"></div>
+    </div>
+    <div class="f-actions">
+      <label for="fStatus" class="sr">Estado</label>
+      <select id="fStatus"><option>Nuevo</option><option>Referido a distribuidor</option><option>En Casa Matriz</option><option>En gestión</option><option>Atendido</option><option>Ganado</option><option>Perdido</option></select>
+      <button type="button" class="act primary" id="fWrite">💬 Responder por WhatsApp</button>
+      <button type="button" class="act" id="fReassign">Reasignar</button>
+    </div>
+  </div>
+  <p class="toast" id="fToast" role="status"></p>
+  <div class="f-grid">
+    <aside class="f-col">
+      <div class="box"><h3>Datos del contacto</h3><dl class="dl" id="fData"></dl></div>
+      <div class="box"><h3>Etiquetas</h3>
+        <div class="tags" id="fTags"></div>
+        <form id="tagForm" class="inline"><label for="tagIn" class="sr">Nueva etiqueta</label><input id="tagIn" placeholder="Agregar etiqueta y Enter" autocomplete="off"></form>
+      </div>
+      <div class="box"><h3>Datos comerciales</h3><dl class="dl" id="fBiz"></dl></div>
+    </aside>
+    <section class="f-col">
+      <div class="box">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" class="tab on" data-tab="res">Resumen IA</button>
+          <button type="button" role="tab" class="tab" data-tab="conv">Conversación</button>
+          <button type="button" role="tab" class="tab" data-tab="act">Actividad</button>
+          <button type="button" role="tab" class="tab" data-tab="notes">Notas <em id="nCount">0</em></button>
+        </div>
+        <div class="tabp" id="t-res"></div>
+        <div class="tabp" id="t-conv" hidden></div>
+        <div class="tabp" id="t-act" hidden></div>
+        <div class="tabp" id="t-notes" hidden>
+          <form id="noteForm" class="noteform"><label for="noteIn" class="sr">Nueva nota</label><textarea id="noteIn" rows="3" placeholder="Escribe un comentario para el equipo… Usa @ para mencionar (ej. @Ventas)"></textarea><button type="submit" class="act primary">Agregar nota</button></form>
+          <ul class="notes" id="fNotes"></ul>
+        </div>
+      </div>
+    </section>
+    <aside class="f-col">
+      <div class="box"><h3>Asignado a</h3><div id="fAssign"></div></div>
+      <div class="box"><h3>Próximas tareas</h3><ul class="tasks" id="fTasks"></ul></div>
+      <div class="box"><h3>Historial de enrutamiento</h3><ul class="route-h" id="fRoute"></ul></div>
+    </aside>
+  </div>
+</div>
+</div>
+    </div>
+    <div class="inside" aria-label="Piezas del agente">
+      <span class="label">Lo que el bot hace por dentro</span>
+      <span class="piece" data-p="1">1 · Entiende el mensaje</span>
+      <span class="piece" data-p="2">2 · Consulta el directorio</span>
+      <span class="piece" data-p="4">4 · Seguimiento</span>
+      <span class="piece" data-p="5">5 · Pasa a una persona</span>
+      <span class="piece" data-p="6">6 · Registra en el CRM</span>
+    </div>
+  </section>
+</main>
+<footer>HenkanCX · henkancx.com · Prototipo para validación. Tiendas: red de detal 2025 de Jean Center. Ciudades, datos de contacto, conversaciones y cifras de desempeño son simulados.</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const chat=$("chat"), fieldsEl=$("fields"), tl=$("timeline");
+const FIELDS=[["canal","Canal"],["tel","Teléfono"],["pais","País"],["ciudad","Ciudad"],["tienda","Tienda física"],["venta","Tipo de venta"],["solicitud","Solicitud"],["linea","Línea de interés"],["correo","Correo"],["asignado","Asignado a"]];
+const SEED=[["11:52","Instagram","Costa Rica · San José","Consumidor","Dónde comprar","Punto Favorito","Atendido","p-ok"],
+ ["11:40","WhatsApp","México · Monterrey","Tienda","Quiero distribuir","Ventas Casa Matriz","En Casa Matriz","p-wait"],
+ ["11:15","Messenger","Honduras · San Pedro Sula","Tienda","Información","LoMax","Referido","p-ref"],
+ ["10:58","WhatsApp","Panamá · Ciudad de Panamá","Consumidor","Dónde comprar","Casa Matriz Panamá","Atendido","p-ok"]];
+
+/* Escenarios del demo (datos de ejemplo) */
+const SCENARIOS=[
+ { canal:"WhatsApp", tel:"+502 5•••• 4821", pais:"Guatemala", flag:"🇬🇹",
+   first:"Hola, buenas. Tengo una tienda y quiero información de sus jeans 👖",
+   intent:"información para tienda",
+   steps:[
+    {q:"¿En qué ciudad está tu tienda?", f:"ciudad", o:["Ciudad de Guatemala","Quetzaltenango","Escuintla"]},
+    {q:"¿Tienes <b>tienda física</b>?", f:"tienda", o:["Sí","No, vendo en línea"]},
+    {q:"¿Vendes al <b>detal</b>, al <b>por mayor</b> o ambas?", f:"venta", o:["Al detal","Al por mayor","Ambas"]},
+    {q:"¿Qué necesitas hoy?", f:"solicitud", o:["Información de producto","Quiero comprar"], log:true},
+    {q:"¿Qué línea te interesa?", f:"linea", o:["Jean clásico","Fit / ajustado","Varias líneas"], trend:true},
+    {q:"¿Nos compartes tu correo? Es <b>opcional</b>.", f:"correo", o:["tienda.lucia@correo.gt","Prefiero no darlo"]}],
+   end:"distribuidor"},
+ { canal:"WhatsApp", tel:"+56 9•••• 3307", pais:"Chile", flag:"🇨🇱",
+   first:"Buenas tardes. Soy distribuidor mayorista y me interesa traer la marca a Chile. Busco unas 600 unidades para empezar.",
+   intent:"compra mayorista / distribución",
+   steps:[
+    {q:"¿En qué ciudad opera tu empresa?", f:"ciudad", o:["Santiago","Valparaíso","Concepción"]},
+    {q:"¿Tienes <b>tienda física</b>?", f:"tienda", o:["Sí, 3 tiendas","No, solo distribuyo"]},
+    {q:"¿Vendes al <b>detal</b>, al <b>por mayor</b> o ambas?", f:"venta", o:["Al por mayor","Ambas"]},
+    {q:"¿Qué necesitas hoy?", f:"solicitud", o:["Quiero distribuir la marca","Quiero comprar al por mayor"], log:true},
+    {q:"¿Qué línea te interesa?", f:"linea", o:["Jean clásico","Fit / ajustado","Varias líneas"], trend:true},
+    {q:"¿Nos compartes tu correo para que Ventas te envíe la propuesta?", f:"correo", o:["compras@andesmoda.cl","Prefiero que me llamen"]}],
+   end:"matriz"},
+ { canal:"Instagram", tel:"@valeria.ccs (Instagram)", pais:"Venezuela", flag:"🇻🇪",
+   first:"Hola!! Vi un jean fit en su página, ¿dónde lo consigo en Venezuela?",
+   intent:"dónde comprar (consumidor)", noPhone:true,
+   steps:[
+    {q:"¿En qué ciudad estás?", f:"ciudad", o:["Caracas","Valencia","Maracaibo"]},
+    {q:"¿Qué línea te interesa?", f:"linea", o:["Fit / ajustado","Jean clásico"], trend:true},
+    {q:"¿Nos compartes tu correo para avisarte de novedades? Es <b>opcional</b>.", f:"correo", o:["Prefiero no darlo","valeria@correo.ve"]}],
+   end:"tienda"}
+];
+
+let lead={}, clock=0, timers=[], sc=0, run=0;
+const tnow=()=>`12:${String(4+clock).padStart(2,"0")}`;
+const sleep=ms=>new Promise(r=>{const t=setTimeout(r,ms);timers.push(t)});
+const alive=id=>id===run;
+
+function renderFields(flash){fieldsEl.innerHTML=FIELDS.map(([k,l])=>`<div class="f ${flash===k?"flash":""}"><span>${l}</span><b class="${lead[k]?"":"empty"}">${lead[k]||"—"}</b></div>`).join("")}
+function setField(k,v){lead[k]=v;renderFields(k)}
+function status(txt,cls){const s=$("status");s.textContent=txt;s.className="pill "+cls}
+function log(html,piece){tl.insertAdjacentHTML("afterbegin",`<li><time>${tnow()}</time><span>${html}${piece?`<span class="tag">Pieza ${piece}</span>`:""}</span></li>`);clock++;if(piece)lightPiece(piece)}
+function lightPiece(p){document.querySelectorAll(".piece").forEach(e=>e.classList.toggle("on",e.dataset.p==String(p)))}
+function scroll(){chat.scrollTop=chat.scrollHeight}
+function addMsg(side,html){chat.insertAdjacentHTML("beforeend",`<div class="msg ${side}">${html}<time>${tnow()}${side==="out"?' <span class="ticks">✓✓</span>':""}</time></div>`);scroll()}
+function sys(t){chat.insertAdjacentHTML("beforeend",`<div class="sys">${t}</div>`);scroll()}
+async function bot(html,id,delay=700){chat.insertAdjacentHTML("beforeend",`<div class="typing" id="typing"><i></i><i></i><i></i></div>`);scroll();await sleep(delay);$("typing")?.remove();if(alive(id))addMsg("in",html)}
+function options(list){return new Promise(res=>{
+  const wrap=document.createElement("div");wrap.className="opts";
+  list.forEach(o=>{const b=document.createElement("button");b.type="button";b.className="opt";b.textContent=o;b.onclick=()=>{wrap.remove();addMsg("out",o);res(o)};wrap.appendChild(b)});
+  chat.appendChild(wrap);scroll();wrap.querySelector("button").focus({preventScroll:true});
+})}
+function nextBtn(label){return new Promise(res=>{const b=document.createElement("button");b.type="button";b.className="next";b.textContent=label;b.onclick=()=>{b.remove();res()};chat.appendChild(b);scroll()})}
+function row(st,cls,asig){const S=SCENARIOS[sc];return [ "12:04",S.canal, lead.ciudad?`${S.pais} · ${lead.ciudad}`:"—", lead.tienda? (lead.tienda.startsWith("Sí")?"Tienda":(lead.venta||"").includes("mayor")?"Mayorista":"Tienda") : (sc===2?"Consumidor":"—"), lead.solicitud||"—", asig||"—", st, cls]}
+function renderRows(extra){const rows=(extra?[extra]:[]).concat(SEED);$("rows").innerHTML=rows.map((r,i)=>`<tr class="${extra&&i===0?"new":""}"><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="pill ${r[7]}">${r[6]}</span></td></tr>`).join("")}
+function showEmail(head,hello,body,btn){$("emailHead").innerHTML=head;$("emailHello").innerHTML=hello;$("emailBody").innerHTML=body;const b=$("attended");b.textContent=btn;b.disabled=false;$("email").classList.add("show")}
+function summary(){return [`País y ciudad: ${lead.ciudad}, ${lead.pais}`,lead.tienda&&`Tienda física: ${lead.tienda}`,lead.venta&&`Venta: ${lead.venta}`,`Solicitud: ${lead.solicitud}`,`Interés: ${lead.linea}`,`Contacto: ${lead.tel}`,lead.correo&&lead.correo.includes("@")&&lead.correo].filter(Boolean).join(" · ")}
+
+async function start(){
+  timers.forEach(clearTimeout);timers=[];const id=++run;lead={};clock=0;const S=SCENARIOS[sc];
+  document.querySelectorAll("[data-sc]").forEach(b=>b.classList.toggle("on",+b.dataset.sc===sc));
+  chat.innerHTML="";sys("HOY");sys("🔒 Los mensajes están cifrados de extremo a extremo.");
+  document.querySelector(".wa-head small").textContent=S.canal==="Instagram"?"Mensaje directo de Instagram · asistente virtual":"Cuenta de empresa · asistente virtual";
+  document.querySelector(".wa-head").style.background=S.canal==="Instagram"?"linear-gradient(90deg,#833AB4,#C13584,#E1306C)":"";
+  document.querySelector(".label span").textContent="Lo que ve el cliente · "+S.canal;
+  tl.innerHTML="";renderFields();renderRows();status("Esperando mensaje","p-none");
+  $("route").hidden=true;$("email").classList.remove("show");$("kpiTotal").textContent="14";$("kpiRef").textContent="9";$("kpiMat").textContent="3";lightPiece(0);
+  await sleep(500); if(!alive(id))return;
+  addMsg("out",S.first);
+  setField("canal",S.canal);setField("tel",S.tel);status("Nuevo","p-new");
+  renderRows(row("Nuevo","p-new"));$("kpiTotal").textContent="15";
+  log(`Mensaje recibido por <b>${S.canal}</b>. Contacto nuevo creado.`,6);
+  await bot("¡Hola! 👋 Soy el asistente virtual de <b>Jean Center</b>. Te ayudo a encontrar dónde comprar o cómo trabajar con nuestras marcas.\n\n<i style=\"font-size:11.5px;color:#667781\">Al continuar aceptas el tratamiento de tus datos para atender tu solicitud.</i>",id,900); if(!alive(id))return;
+  log(`Intención detectada: <b>${S.intent}</b>.`,1);
+  if(S.noPhone){ await bot(`Con gusto 😊. ¿Desde qué país nos escribes?`,id); if(!alive(id))return; await options([S.pais,"Colombia","Guatemala"]); }
+  else { await bot(`Veo que escribes desde un número de <b>${S.pais}</b> ${S.flag}. ¿Es correcto?`,id); if(!alive(id))return; await options([`Sí, ${S.pais}`,"Otro país"]); }
+  if(!alive(id))return; setField("pais",S.pais); if(S.end==="tienda") setField("solicitud","Dónde comprar"); log(`País confirmado${S.noPhone?"":" por prefijo telefónico"}: <b>${S.pais}</b>.`,1);
+  for(const st of S.steps){
+    await bot(st.q,id); if(!alive(id))return;
+    const v=await options(st.o); if(!alive(id))return;
+    setField(st.f, v.startsWith("Prefiero")?"No proporcionado":v);
+    if(st.log) log(`Solicitud clasificada: <b>${v}</b>.`,1);
+    if(st.trend) log(`Tendencia registrada: <b>${v}</b> · ${S.pais}.`,6);
+  }
+  if(S.end==="distribuidor") await endDistribuidor(id);
+  if(S.end==="matriz") await endMatriz(id);
+  if(S.end==="tienda") await endTienda(id);
+}
+
+async function endDistribuidor(id){
+  const city=lead.ciudad, st=city==="Quetzaltenango"?"Tiendas La Riviera":"Urban Guatemala", i=distIdx(st), d=DIST[i], c=dContact(i);
+  $("route").hidden=false;
+  $("ruleTxt").textContent=`SI país = Guatemala Y ciudad = ${city} Y solicitud = ${lead.solicitud} → tienda autorizada más cercana`;
+  $("routeTxt").innerHTML=`Enrutado a <b>${st}</b> · tienda autorizada en ${d[2]} (${d[5]}% de respuesta)`;
+  log(`Directorio consultado: <b>2 tiendas</b> en Guatemala. Elegida ${st} por cercanía a ${city}.`,2);
+  await bot(`¡Gracias! Para <b>${city}</b> te atiende nuestra tienda autorizada:<div class="card-dist"><b>${st}</b>${c.dir}<br>Venta al detal · Atiende: ${c.nombre}<span class="link">📷 @${d[8]}</span><span class="link">💬 Escribirles por WhatsApp</span></div>`,id,1100); if(!alive(id))return;
+  await bot("Ya les avisamos para que te contacten. En 2 días te escribo para saber si te atendieron. 🙌",id); if(!alive(id))return;
+  setField("asignado",st);status("Referido a tienda","p-ref");
+  renderRows(row("Referido","p-ref",st));$("kpiRef").textContent="10";
+  showEmail(`Correo enviado a <b>${c.correo}</b> · Asunto: Nuevo contacto de Jean Center – ${city}`,`Hola, ${c.nombre.split(" ")[0]} (<b>${st}</b>). Un cliente de su zona busca productos Jean Center:`,summary(),"Marcar como atendido");
+  log(`Correo con el resumen enviado a <b>${st}</b> (${c.correo}).`,6);
+  await sleep(500); log("Seguimiento programado para dentro de <b>48 horas</b>.",4);
+  await followUp(id,st);
+}
+
+async function endMatriz(id){
+  $("route").hidden=false;
+  $("ruleTxt").textContent=`SI país = Chile (sin distribuidor) Y solicitud = ${lead.solicitud} → Casa Matriz · Ventas`;
+  $("routeTxt").innerHTML="Enrutado a <b>Ventas Casa Matriz</b> · Chile no tiene distribuidor activo: oportunidad de expansión";
+  log("Directorio consultado: <b>0 distribuidores</b> en Chile. Se aplica la regla de Casa Matriz.",2);
+  await bot("¡Excelente! Hoy no tenemos tiendas en <b>Chile</b>, así que tu solicitud va directo a nuestro equipo de <b>Ventas en Casa Matriz (Panamá)</b>.",id,1000); if(!alive(id))return;
+  await bot("Te paso con un asesor. Te contactará en un máximo de <b>24 horas hábiles</b> con la propuesta para distribuidores. 🤝",id); if(!alive(id))return;
+  sys("El asistente se pausó · un asesor de Ventas atenderá este chat");
+  setField("asignado","Ventas Casa Matriz");status("En Casa Matriz","p-wait");
+  renderRows(row("En Casa Matriz","p-wait","Ventas Casa Matriz"));$("kpiMat").textContent="4";
+  showEmail(`Correo enviado a <b>Ventas Casa Matriz · Panamá</b> · Asunto: 🔥 Oportunidad de distribución – Chile`,`Hola, equipo de Ventas. Un prospecto de un país <b>sin distribuidor</b> quiere trabajar con la marca:`,summary()+" · Volumen mencionado: ~600 unidades","Tomar el caso");
+  log("Correo de oportunidad enviado a <b>Ventas Casa Matriz</b> con el resumen de la conversación.",5);
+  log("Asistente en pausa · se reactiva solo en <b>8 horas</b> si nadie responde.",5);
+  log("Tarea creada en Kaname: <b>Contactar prospecto de Chile</b> · vence en 24 h hábiles.",6);
+}
+
+const VE_STORE={Caracas:["Palacio del Jeans","elpalaciodel.jean",6],Valencia:["Dollhouse","dollhousejeans",3],Maracaibo:["Camerino","camerinofashion",0]};
+async function endTienda(id){
+  const city=lead.ciudad, [st,ig,more]=VE_STORE[city]||VE_STORE.Caracas, r=DIST[distIdx(st)][5];
+  $("route").hidden=false;
+  $("ruleTxt").textContent=`SI país = Venezuela Y ciudad = ${city} Y perfil = consumidor → tienda con mejor respuesta en la ciudad`;
+  $("routeTxt").innerHTML=`Enrutado a <b>${st}</b> · tienda autorizada en ${city} (${r}% de respuesta)`;
+  log(`Directorio consultado: <b>${more+1} tienda${more?"s":""}</b> en ${city}. Elegida ${st}.`,2);
+  await bot(`¡Genial! En <b>${city}</b> encuentras la línea ${lead.linea.toLowerCase()} aquí:<div class="card-dist"><b>${st}</b>Tienda autorizada Jean Center · ${city}<span class="link">📷 @${ig}</span><span class="link">💬 Escribirles por WhatsApp</span></div>${more?`<span style="font-size:12px;color:#667781">Hay ${more} tiendas más en ${city}. Escribe "más" para verlas.</span>`:""}`,id,1100); if(!alive(id))return;
+  await bot("¿Te ayudo con algo más? 😊",id); if(!alive(id))return;
+  const v=await options(["No, gracias","Quiero comprar al por mayor"]); if(!alive(id))return;
+  if(v==="No, gracias"){await bot("¡Gracias por escribirnos! Que disfrutes tu Jean Center 💙",id); }
+  else {await bot("Perfecto, te paso con nuestro equipo de Ventas en Casa Matriz.",id); setField("solicitud","Compra al por mayor");}
+  setField("asignado",st);status("Referido a tienda","p-ref");
+  renderRows(row("Referido","p-ref",st));$("kpiRef").textContent="10";
+  log("Contacto registrado como <b>consumidor</b>. Se avisa a la tienda y queda en su lista de contactos.",6);
+  log(`Dato para el reporte: interés en <b>${lead.linea}</b> desde Instagram · ${city}, Venezuela.`,6);
+}
+
+async function followUp(id,dist){
+  await sleep(600); if(!alive(id))return;
+  await nextBtn("⏩ Simular: 48 horas después"); if(!alive(id))return;
+  sys("DENTRO DE 2 DÍAS"); clock+=40;
+  await bot(`Hola 👋, soy el asistente de <b>Jean Center</b>. ¿Pudiste hablar con <b>${dist}</b>?`,id,900); if(!alive(id))return;
+  log("Mensaje de seguimiento enviado (plantilla aprobada por Meta).",4);
+  const v=await options(["Sí, ya me atendieron","No, nadie me contactó"]); if(!alive(id))return;
+  if(v.startsWith("Sí")){
+    await bot("¡Qué bueno! Gracias por confirmarnos. 💙",id); if(!alive(id))return;
+    status("Atendido por distribuidor","p-ok");renderRows(row("Atendido","p-ok",dist));
+    log("El cliente confirmó que fue <b>atendido</b>. Suma a la tasa de respuesta del distribuidor.",4);
+  } else {
+    await bot("Lo sentimos. Ya avisamos a nuestro equipo de <b>Ventas</b> para que te contacte hoy mismo.",id); if(!alive(id))return;
+    status("Escalado a Casa Matriz","p-wait");renderRows(row("Escalado","p-wait","Ventas Casa Matriz"));setField("asignado","Ventas Casa Matriz");
+    log("Distribuidor <b>no respondió</b>. Caso escalado a Ventas Casa Matriz y alerta al responsable de país.",5);
+  }
+}
+
+$("attended").onclick=()=>{const b=$("attended");
+  if(sc===1){status("En gestión · Ventas","p-ok");log("Un asesor de Ventas <b>tomó el caso</b>.",5);renderRows(row("En gestión","p-ok","Ventas Casa Matriz"));}
+  else{status("Atendido por distribuidor","p-ok");log("El distribuidor marcó el contacto como <b>atendido</b>.",6);renderRows(row("Atendido","p-ok",lead.asignado));}
+  b.disabled=true;b.textContent="Hecho ✓"};
+document.querySelectorAll("[data-sc]").forEach(b=>b.onclick=()=>{sc=+b.dataset.sc;start()});
+$("reset").onclick=start;
+/* Vistas de Kaname: directorio y reporte (datos de ejemplo) */
+const DIST=[
+ ["Urban Guatemala","Guatemala","Ciudad de Guatemala","Detal",124,94,"hace 3 días","Activo","urban.guatemala"],
+ ["Tiendas La Riviera","Guatemala","Quetzaltenango","Detal",68,90,"hace 1 semana","Activo","tiendaslaviera"],
+ ["Punto Favorito","Costa Rica","San José","Detal",64,96,"hace 2 días","Activo","puntofavorito_"],
+ ["Tiendas El Parque","Costa Rica","Heredia","Detal",32,91,"hace 1 semana","Activo","tiendaselparque"],
+ ["Wolf Mall","Costa Rica","Limón","Detal",16,88,"hace 2 semanas","Activo","wolfmallcenterlimonoficial"],
+ ["El Compadre","Honduras","Tegucigalpa","Detal",40,89,"hace 4 días","Activo","elcompadrehn"],
+ ["Maex","Honduras","La Ceiba","Detal",36,86,"hace 1 semana","Activo","maexshops"],
+ ["LoMax","Honduras","San Pedro Sula","Detal",44,55,"hace 5 semanas","Revisar","lomaxhn"],
+ ["Importadora El Sol","República Dominicana","Santo Domingo","Detal",48,92,"hace 3 días","Activo","importadoraelsol"],
+ ["Prisma Moda","El Salvador","San Salvador","Detal",36,90,"hace 1 semana","Activo","prismamoda"],
+ ["Almacenes Siman","El Salvador","San Salvador","Detal",32,87,"hace 2 semanas","Activo","almacenessiman_sv"],
+ ["Código Fashion","El Salvador","Santa Ana","Detal",20,84,"hace 2 semanas","Activo","codigofashionsv"],
+ ["Palacio del Jeans","Venezuela","Caracas","Detal",56,97,"ayer","Activo","elpalaciodel.jean"],
+ ["Mundo Moda Caracas","Venezuela","Caracas","Detal",36,93,"hace 3 días","Activo","mundo_modaccs"],
+ ["Meencanta","Venezuela","Caracas","Detal",24,90,"hace 1 semana","Activo","mencanta_55"],
+ ["Kaizen","Venezuela","Caracas","Detal",16,85,"hace 2 semanas","Activo","kaizendsgn"],
+ ["JD Store Boutique","Venezuela","Caracas","Detal",20,88,"hace 1 semana","Activo","jd_storeboutique"],
+ ["Nay Boutique","Venezuela","Caracas","Detal",20,91,"hace 4 días","Activo","nay.boutiqueoficial"],
+ ["Shollsty","Venezuela","Caracas","Detal",12,82,"hace 3 semanas","Activo","shollstyoficial"],
+ ["Moda Chic Sofía","Venezuela","Valencia","Detal",20,89,"hace 1 semana","Activo","moda_chicsofia"],
+ ["Dadivas","Venezuela","Valencia","Detal",16,86,"hace 2 semanas","Activo","dadivastiendas"],
+ ["Dreamshop","Venezuela","Valencia","Detal",12,83,"hace 2 semanas","Activo","dreamshop.vn"],
+ ["Dollhouse","Venezuela","Valencia","Detal",28,95,"hace 2 días","Activo","dollhousejeans"],
+ ["Camerino","Venezuela","Maracaibo","Detal",24,92,"hace 4 días","Activo","camerinofashion"],
+ ["Indiana","Venezuela","Puerto Ordaz","Detal",16,87,"hace 1 semana","Activo","indianajeansport"],
+ ["Frontera","Venezuela","Calabozo","Detal",8,68,"hace 6 semanas","Revisar","fronterasshoesfp"],
+ ["Pisouno","Venezuela","Lechería","Detal",12,90,"hace 1 semana","Activo","pisounojeans"],
+ ["Jeshua","Venezuela","Barquisimeto","Detal",16,88,"hace 1 semana","Activo","jeshua_boutique"],
+ ["Amore Mia","Venezuela","Barquisimeto","Detal",8,85,"hace 2 semanas","Activo","amore_miakids"],
+ ["Nalusa Store","Venezuela","Portuguesa","Detal",12,89,"hace 1 semana","Activo","nalusa.store"],
+ ["Zona Libre","Colombia","Barranquilla","Detal",24,91,"hace 3 días","Activo","zonalibreoficial_"],
+ ["Usska","Colombia","Medellín","Detal",20,88,"hace 1 semana","Activo","Usska.med"]];
+const CC={"Guatemala":"502","Costa Rica":"506","Honduras":"504","República Dominicana":"1 809","El Salvador":"503","Venezuela":"58","Colombia":"57"};
+const distIdx=n=>DIST.findIndex(d=>d[0]===n);
+const CNAMES=["Mariela Castillo","Jorge Aguilar","Karen Soto","Luis Fernández","Daniela Ruiz","Ricardo Méndez","Patricia Rojas","Alejandro Vega","Yesenia Mora","Gustavo Pineda","Liliana Torres","Fernando Ochoa","Mónica Salas","Rafael Bermúdez","Carolina Díaz","Enrique Gil"];
+const slug=n=>n.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+const dContact=i=>{const d=DIST[i];return {nombre:CNAMES[i%CNAMES.length],cargo:i%3===0?"Gerente de tienda":i%3===1?"Encargada de ventas":"Propietario",tel:`+${CC[d[1]]} ${d[1]==="Venezuela"?"412":"7"}•••• ${String(2100+i*137).slice(-4)}`,correo:`ventas@${slug(d[0])}.com`,dir:["Centro Comercial","Av. Principal","Mall","Calle Comercio"][i%4]+" · "+d[2]}};
+const EXPANSION=[["Chile",9,"consultas mayoristas en 3 semanas"],["Perú",6,"consultas · 4 tiendas físicas"],["México",5,"consultas · interés en distribuir"]];
+let distFilter="Todos";
+function rateBar(v){const c=v>=85?"var(--ok)":v>=70?"var(--warn)":"#DC2626";return `<div class="rate"><div class="track"><div class="fill" style="width:${v}%;background:${c}"></div></div><span>${v}%</span></div>`}
+function renderDist(){
+  const countries=["Todos",...new Set(DIST.map(d=>d[1]))];
+  $("distFilters").innerHTML=countries.map(c=>`<button type="button" class="fbtn ${c===distFilter?"on":""}" data-c="${c}">${c}</button>`).join("");
+  $("distFilters").querySelectorAll("button").forEach(b=>b.onclick=()=>{distFilter=b.dataset.c;renderDist()});
+  $("distRows").innerHTML=DIST.filter(d=>distFilter==="Todos"||d[1]===distFilter).map(d=>`<tr><td><b>${d[0]}</b> <span class="ex">(ej.)</span></td><td>${d[1]}<br><span class="ex" style="font-style:normal">${d[2]}</span></td><td>${d[3]}</td><td class="r">${d[4]}</td><td>${rateBar(d[5])}</td><td><span class="pill ${d[7]==="Activo"?"p-ok":"p-wait"}">${d[7]}</span></td></tr>`).join("");
+  $("expansion").innerHTML=EXPANSION.map(e=>`<div><b>${e[0]}</b><span>${e[1]} ${e[2]}</span></div>`).join("");
+}
+function bars(id,data,alt){const max=Math.max(...data.map(d=>d[1]));$(id).innerHTML=data.map(([l,v])=>`<div class="bar-row"><span>${l}</span><div class="track"><div class="fill ${alt?"alt":""}" style="width:${v/max*100}%"></div></div><b>${v}</b></div>`).join("")}
+function renderRep(){
+  bars("bCanal",[["WhatsApp",118],["Instagram",54],["Messenger",22],["Comentarios FB/IG",12],["Chat web",6]]);
+  bars("bPais",[["Venezuela",82],["Guatemala",41],["Honduras",26],["Costa Rica",24],["El Salvador",19],["Panamá (Casa Matriz)",11]],true);
+  bars("bLinea",[["Fit / ajustado",81],["Jean clásico",72],["Varias líneas",36],["Otra / no indica",23]]);
+  const P=[["Consumidor",118,"var(--purple)"],["Tienda",61,"var(--magenta)"],["Mayorista / distribuidor",33,"var(--navy)"]];const t=P.reduce((a,b)=>a+b[1],0);
+  $("perfil").innerHTML=P.map(p=>`<div style="width:${p[1]/t*100}%;background:${p[2]}" title="${p[0]}"></div>`).join("");
+  $("perfilLeg").innerHTML=P.map(p=>`<li><i style="background:${p[2]}"></i>${p[0]}<b>${p[1]} · ${Math.round(p[1]/t*100)}%</b></li>`).join("");
+}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("on",x===b));
+  ["contactos","dist","rep"].forEach(v=>$("v-"+v).hidden=v!==b.dataset.view);
+});
+renderDist();renderRep();
+document.querySelectorAll("[data-sc]").forEach(b=>b.addEventListener("click",()=>document.querySelector('[data-view="contactos"]').click()));
+
+/* ===== Ficha del contacto (datos de ejemplo) ===== */
+const B=(t,side="in",time="")=>({side,html:t,t:time});
+const FICHAS={
+ s0:{nombre:"María José Vargas",ini:"MV",canal:"Instagram",tel:"@majo.vargas.cr",correo:"majo.vargas@correo.cr",pais:"Costa Rica",ciudad:"San José",perfil:"Consumidor",tienda:"No",venta:"—",origen:"Mensaje directo de Instagram",primera:"28 oct 2026",idioma:"Español",
+   tags:["Consumidor","Fit / ajustado","Instagram","Recurrente"],potencial:"Bajo",volumen:"Compra personal",lineas:"Fit / ajustado, Jean clásico",
+   estado:"Atendido",asignado:"Punto Favorito",asigTipo:"dist",rate:96,
+   dias:[{d:"12 nov 2026",canal:"Instagram",txt:"Volvió a escribir preguntando si Punto Favorito tenía tallas 28 y 30 en fit. Se le dio el contacto directo de la tienda.",int:"Dónde comprar",sent:"Positivo 😊"},
+         {d:"28 oct 2026",canal:"Instagram",txt:"Primer contacto. Vio una publicación de la línea fit y preguntó dónde comprar en San José. Referida a Punto Favorito.",int:"Dónde comprar",sent:"Positivo 😊"}],
+   conv:[B("Hola! ¿En Punto Favorito tienen el fit en talla 28 y 30?","out","11:50"),B("¡Hola de nuevo, María José! 👋 Las tallas las confirma directamente la tienda. Te dejo su contacto:","in","11:50"),B("<b>Punto Favorito</b>\n📷 @puntofavorito_","in","11:51"),B("Gracias!!","out","11:52")],
+   notas:[{who:"Marketing · Daniela R.",t:"12 nov · 12:20",txt:"Segunda consulta por fit en 2 semanas. Incluir en la audiencia de la campaña de fin de año."}],
+   tasks:[{t:"Incluir en audiencia de campaña navideña",due:"20 nov · Marketing",done:false}],
+   route:[{t:"12 nov · 11:51",txt:"Consumidor en San José → Punto Favorito"},{t:"28 oct · 16:03",txt:"Consumidor en San José → Punto Favorito"}]},
+ s1:{nombre:"Roberto Garza",ini:"RG",empresa:"Boutique Norte",canal:"WhatsApp",tel:"+52 81•••• 2290",correo:"compras@boutiquenorte.mx",pais:"México",ciudad:"Monterrey",perfil:"Tienda",tienda:"Sí, 2 tiendas",venta:"Ambas",origen:"WhatsApp · anuncio Click-to-WhatsApp",primera:"12 nov 2026",idioma:"Español",
+   tags:["Quiere distribuir","País sin distribuidor","Alto potencial","México"],potencial:"Alto",volumen:"~400 unidades / trimestre",lineas:"Jean clásico, Varias líneas",
+   estado:"En Casa Matriz",asignado:"Ventas Casa Matriz",asigTipo:"matriz",resp:"Carlos M. (Ventas)",
+   dias:[{d:"12 nov 2026",canal:"WhatsApp",txt:"Dueño de 2 boutiques en Monterrey. Quiere ser distribuidor en el norte de México. Pidió condiciones y lista de precios mayoristas. México no tiene distribuidor: se envió a Ventas Casa Matriz.",int:"Quiere distribuir",sent:"Muy interesado 🔥"}],
+   conv:[B("Buenas, tengo 2 boutiques en Monterrey y quiero distribuir su marca en el norte.","out","11:38"),B("¡Excelente, Roberto! Hoy no tenemos distribuidor en <b>México</b>, así que tu solicitud va directo a nuestro equipo de <b>Ventas en Casa Matriz</b>.","in","11:39"),B("¿Cuánto volumen manejarías al inicio?","in","11:39"),B("Unas 400 piezas por trimestre para empezar","out","11:40"),B("Perfecto. Te contactará un asesor en máximo 24 horas hábiles. 🤝","in","11:40")],
+   notas:[{who:"Ventas · Carlos M.",t:"12 nov · 12:05",txt:"Lo llamo mañana a las 10:00. Preparar lista de precios mayoristas para MX. @Gerencia ¿aplicamos condiciones de nuevo distribuidor?"}],
+   tasks:[{t:"Llamar a Roberto y enviar propuesta",due:"13 nov · 10:00 · Carlos M.",done:false},{t:"Validar condiciones para nuevo distribuidor en MX",due:"15 nov · Gerencia",done:false}],
+   route:[{t:"12 nov · 11:40",txt:"México sin distribuidor → Ventas Casa Matriz (oportunidad de expansión)"}]},
+ s2:{nombre:"Karla Mejía",ini:"KM",empresa:"Moda K",canal:"Messenger",tel:"Karla Mejía (Facebook)",correo:"No proporcionado",pais:"Honduras",ciudad:"San Pedro Sula",perfil:"Tienda",tienda:"Sí",venta:"Al detal",origen:"Facebook Messenger",primera:"12 nov 2026",idioma:"Español",
+   tags:["Tienda","Honduras","Distribuidor lento"],potencial:"Medio",volumen:"~80 unidades / mes",lineas:"Fit / ajustado",
+   estado:"Referido a distribuidor",asignado:"LoMax",asigTipo:"dist",rate:55,
+   dias:[{d:"12 nov 2026",canal:"Messenger",txt:"Tienda de ropa en San Pedro Sula. Quiere surtir la línea fit para su tienda. Referida a LoMax. El distribuidor aún no confirma el contacto.",int:"Información de producto",sent:"Neutral 🙂"}],
+   conv:[B("Hola, tengo una tienda en San Pedro Sula, ¿cómo puedo vender la línea fit?","out","11:13"),B("¡Hola, Karla! Para San Pedro Sula te atiende nuestro distribuidor autorizado <b>LoMax</b>. Ya les avisamos para que te contacten.","in","11:14"),B("Ok, gracias","out","11:15")],
+   notas:[{who:"Ventas · Carlos M.",t:"12 nov · 11:45",txt:"Ojo: LoMax tiene 55% de respuesta este mes. Si en 48 h no la contactan, la tomamos desde Casa Matriz."}],
+   tasks:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:"14 nov · 11:15 · Agente",done:false},{t:"Revisar desempeño de LoMax",due:"18 nov · Ventas",done:false}],
+   route:[{t:"12 nov · 11:14",txt:"Tienda en San Pedro Sula → LoMax"}]},
+ s3:{nombre:"Luis Herrera",ini:"LH",canal:"WhatsApp",tel:"+507 6•••• 1188",correo:"luis.h@correo.pa",pais:"Panamá",ciudad:"Ciudad de Panamá",perfil:"Consumidor",tienda:"No",venta:"—",origen:"WhatsApp",primera:"12 nov 2026",idioma:"Español",
+   tags:["Consumidor","Jean clásico","Panamá"],potencial:"Bajo",volumen:"Compra personal",lineas:"Jean clásico",
+   estado:"Atendido",asignado:"Casa Matriz Panamá",asigTipo:"matriz",resp:"Ventas Panamá",
+   dias:[{d:"12 nov 2026",canal:"WhatsApp",txt:"Buscaba jean clásico en Ciudad de Panamá. Como en Panamá atiende directamente Casa Matriz, se derivó a Ventas Panamá y confirmó en el seguimiento que lo atendieron.",int:"Dónde comprar",sent:"Positivo 😊"}],
+   conv:[B("Hola, ¿dónde consigo sus jeans en Panamá?","out","10:56"),B("¡Hola, Luis! En Panamá te atiende directamente nuestra <b>Casa Matriz</b>. Un asesor de Ventas te escribe en minutos.","in","10:57"),B("Excelente, gracias","out","10:58")],
+   notas:[],tasks:[{t:"Seguimiento automático enviado",due:"Completado",done:true}],
+   route:[{t:"12 nov · 10:57",txt:"Panamá → Casa Matriz (Ventas Panamá)"}]}
+};
+const LIVE_NAMES=[["Lucía Morales","Tienda Lucía"],["Felipe Rojas","Andes Moda"],["Valeria Campos",null]];
+let transcript=[], curFicha=null;
+/* registrar mensajes del chat para la ficha */
+const _addMsg=addMsg; addMsg=function(side,html){transcript.push({side,html,t:tnow()});_addMsg(side,html)};
+const _sys=sys; sys=function(t){transcript.push({side:"sys",html:t});_sys(t)};
+const _start=start; start=function(){transcript=[];return _start()};
+
+function liveFicha(){
+  const S=SCENARIOS[sc],[nm,emp]=LIVE_NAMES[sc];const p=lead.tienda?(lead.tienda.startsWith("Sí")?"Tienda":"Mayorista"):(sc===2?"Consumidor":"—");
+  const st=$("status").textContent; const matriz=sc===1||st.includes("Casa Matriz")||st.includes("Escalado");
+  return {live:true,nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),empresa:emp,canal:S.canal,tel:lead.tel||S.tel,correo:lead.correo||"—",pais:lead.pais||"—",ciudad:lead.ciudad||"—",perfil:p,tienda:lead.tienda||"—",venta:lead.venta||"—",origen:S.canal,primera:"12 nov 2026",idioma:"Español",
+   tags:[p,lead.linea,S.pais,sc===1?"Alto potencial":null,sc===1?"País sin distribuidor":null].filter(x=>x&&x!=="—"),
+   potencial:sc===1?"Alto":sc===0?"Medio":"Bajo",volumen:sc===1?"~600 unidades (mencionado)":sc===0?"~60 unidades / mes (estimado)":"Compra personal",lineas:lead.linea||"—",
+   estado:st,asignado:lead.asignado||"Sin asignar",asigTipo:matriz?"matriz":"dist",rate:(DIST[distIdx(lead.asignado)]||[])[5]||90,resp:matriz?"Carlos M. (Ventas)":null,
+   dias:[{d:"12 nov 2026",canal:S.canal,txt:lead.ciudad?`${p==="—"?"Contacto":p} en ${lead.ciudad}, ${lead.pais}. Solicitud: ${(lead.solicitud||"").toLowerCase()}. Interés en ${(lead.linea||"").toLowerCase()}. ${lead.asignado?"Derivado a "+lead.asignado+".":"Conversación en curso."}`:"Conversación en curso: el agente aún está capturando los datos.",int:lead.solicitud||"—",sent:sc===1?"Muy interesado 🔥":"Positivo 😊"}],
+   conv:transcript,notas:[],tasks:lead.asignado?(matriz?[{t:"Contactar prospecto y enviar propuesta",due:"13 nov · 12:00 · Ventas",done:false}]:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:"14 nov · 12:10 · Agente",done:false}]):[],
+   route:lead.asignado?[{t:"12 nov · 12:10",txt:$("ruleTxt").textContent}]:[]};
+}
+/* tabla con nombre y clic a la ficha */
+function renderRows(extra){
+  const rows=(extra?[["live",extra]]:[]).concat(SEED.map((r,i)=>["s"+i,r]));
+  const thead=document.querySelector("#v-contactos thead tr"); if(thead&&!thead.dataset.nm){thead.insertAdjacentHTML("afterbegin","<th>Contacto</th>");thead.insertAdjacentHTML("beforeend","<th></th>");thead.dataset.nm=1}
+  $("rows").innerHTML=rows.map(([id,r],i)=>{const nm=id==="live"?LIVE_NAMES[sc][0]:FICHAS[id].nombre;
+    return `<tr class="click ${extra&&i===0?"new":""}" data-id="${id}" tabindex="0"><td><span class="nm">${nm}</span></td><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td><span class="pill ${r[7]}">${r[6]}</span></td><td><button type="button" class="linkbtn">Ver ficha →</button></td></tr>`}).join("");
+  $("rows").querySelectorAll("tr").forEach(tr=>{tr.onclick=()=>openFicha(tr.dataset.id);tr.onkeydown=e=>{if(e.key==="Enter")openFicha(tr.dataset.id)}});
+}
+function showView(v){document.body.classList.toggle("wide",v==="ficha");["contactos","dist","rep","ficha"].forEach(x=>$("v-"+x).hidden=x!==v);document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("on",x.dataset.view===(v==="ficha"?"contactos":v)));document.querySelector(".k-main").scrollTop=0}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>showView(b.dataset.view));
+$("fBack").onclick=()=>showView("contactos");
+const esc=s=>s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+function openFicha(id){
+  const c=id==="live"?liveFicha():FICHAS[id]; curFicha=c; c.id=id;
+  $("fAv").textContent=c.ini; $("fName").textContent=c.nombre+(c.empresa?" · "+c.empresa:"");
+  $("fSub").textContent=`${c.perfil} · ${c.ciudad}, ${c.pais} · Cliente desde ${c.primera}`;
+  $("fChips").innerHTML=[`Canal: ${c.canal}`,`Potencial: ${c.potencial}`,`Interés: ${c.lineas}`].map(x=>`<span>${x}</span>`).join("");
+  const sel=$("fStatus"); if(![...sel.options].some(o=>o.text===c.estado)) sel.add(new Option(c.estado)); sel.value=c.estado;
+  $("fData").innerHTML=[["Teléfono / usuario",c.tel],["Correo",c.correo],["País",c.pais],["Ciudad",c.ciudad],["Tienda física",c.tienda],["Tipo de venta",c.venta],["Canal de origen",c.origen],["Idioma",c.idioma],["Consentimiento de datos",'<span class="ok">✓ Aceptado</span>']].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  $("fBiz").innerHTML=[["Potencial",c.potencial],["Volumen estimado",c.volumen],["Líneas de interés",c.lineas],["Perfil",c.perfil]].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  renderTags(); renderNotes(); renderTasks();
+  $("t-res").innerHTML=c.dias.map(d=>`<div class="day"><h4>${d.d} <span class="tag">${d.canal}</span></h4><p>${d.txt}</p><div class="meta"><span>Intención: ${d.int}</span><span>Tono: ${d.sent}</span></div></div>`).join("")+`<p class="ex">Resumen generado automáticamente por el agente al cerrar cada conversación.</p>`;
+  $("t-conv").innerHTML=c.conv.length?`<div class="conv">${c.conv.map(m=>m.side==="sys"?`<div class="sys">${m.html}</div>`:`<div class="msg ${m.side}">${m.html}${m.t?`<time>${m.t}</time>`:""}</div>`).join("")}</div>`:`<p class="ex">Sin mensajes todavía.</p>`;
+  $("t-act").innerHTML=id==="live"?`<ul class="timeline" style="max-height:none">${tl.innerHTML}</ul>`:`<ul class="timeline" style="max-height:none">${c.route.map(r=>`<li><time>${r.t.split("·")[1]||""}</time><span>${r.txt}<span class="tag">Enrutamiento</span></span></li>`).join("")}<li><time></time><span>Contacto creado desde <b>${c.canal}</b>.<span class="tag">CRM</span></span></li></ul>`;
+  $("fAssign").innerHTML=c.asigTipo==="dist"?`<div class="assign"><b>${c.asignado}</b><span class="muted">Distribuidor autorizado · ${c.ciudad}</span>${rateBar(c.rate)}<span class="muted">Tasa de respuesta del distribuidor (mes)</span></div>`:`<div class="assign"><b>${c.asignado}</b><span class="muted">Responsable: ${c.resp||"Por asignar"}</span><span class="muted">SLA: respuesta en 24 h hábiles</span></div>`;
+  $("fRoute").innerHTML=c.route.length?c.route.map(r=>`<li>${r.txt}<small>${r.t}</small></li>`).join(""):`<li class="muted">Aún sin enrutar</li>`;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab==="res"));["res","conv","act","notes"].forEach(t=>$("t-"+t).hidden=t!=="res");
+  $("fToast").textContent=""; showView("ficha");
+}
+function renderTags(){$("fTags").innerHTML=curFicha.tags.map((t,i)=>`<span class="tg">${esc(t)}<button type="button" aria-label="Quitar ${esc(t)}" data-i="${i}">×</button></span>`).join("");
+  $("fTags").querySelectorAll("button").forEach(b=>b.onclick=()=>{curFicha.tags.splice(+b.dataset.i,1);renderTags()})}
+function renderNotes(){$("nCount").textContent=curFicha.notas.length;
+  $("fNotes").innerHTML=curFicha.notas.length?curFicha.notas.map(n=>`<li><span class="who"><b>${n.who}</b> · ${n.t}</span><span>${esc(n.txt).replace(/@(\w+)/g,'<span class="mention">@$1</span>')}</span></li>`).join(""):`<li class="ex" style="border:0;padding:0">Sin notas todavía. Escribe la primera.</li>`}
+function renderTasks(){$("fTasks").innerHTML=curFicha.tasks.length?curFicha.tasks.map((t,i)=>`<li class="${t.done?"done":""}"><input type="checkbox" id="tk${i}" ${t.done?"checked":""}><label for="tk${i}"><span>${t.t}</span><small>${t.due}</small></label></li>`).join(""):`<li class="muted">Sin tareas pendientes</li>`;
+  $("fTasks").querySelectorAll("input").forEach((x,i)=>x.onchange=()=>{curFicha.tasks[i].done=x.checked;renderTasks()})}
+$("tagForm").onsubmit=e=>{e.preventDefault();const v=$("tagIn").value.trim();if(v){curFicha.tags.push(v);$("tagIn").value="";renderTags()}};
+$("noteForm").onsubmit=e=>{e.preventDefault();const v=$("noteIn").value.trim();if(!v)return;curFicha.notas.unshift({who:"Tú · Jean Center",t:"ahora",txt:v});$("noteIn").value="";renderNotes()};
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));["res","conv","act","notes"].forEach(x=>$("t-"+x).hidden=x!==t.dataset.tab)});
+$("fStatus").onchange=e=>{curFicha.estado=e.target.value;$("fToast").textContent=`Estado actualizado a "${e.target.value}". Queda registrado en la actividad.`};
+$("fWrite").onclick=()=>{$("fToast").textContent="Se abre el chat en la bandeja de Botmaker y el agente se pausa mientras respondes."};
+$("fReassign").onclick=()=>{$("fToast").textContent="Reasignar: elige otro distribuidor del directorio o un asesor de Ventas (simulado en el demo)."};
+/* botón en "Contacto en curso" */
+document.querySelector("#v-contactos .grid2 .box h3").insertAdjacentHTML("beforeend",'<button type="button" class="linkbtn" id="liveOpen" style="margin-left:auto;margin-right:8px">Ver ficha completa →</button>');
+$("liveOpen").onclick=()=>openFicha("live");
+$("reset").onclick=start;
+
+/* ===== Interés del contacto + ficha del distribuidor (datos de ejemplo) ===== */
+const INTERES={
+ s0:{motivo:"Compra personal",deseo:"Encontrar el jean fit en tallas 28 y 30 en Punto Favorito antes de fin de mes.",urg:"Media",prods:[["Jean Fit tiro alto · dama","Azul medio · tallas 28 y 30","2 unidades"],["Jean clásico recto · dama","Azul oscuro · talla 28","Lo está considerando"]]},
+ s1:{motivo:"Quiere ser distribuidor en el norte de México",deseo:"Conocer condiciones, precios mayoristas y si puede tener exclusividad en Monterrey para surtir sus 2 boutiques desde enero.",urg:"Alta",prods:[["Jean clásico recto · caballero","Surtido de tallas 28–38","~250 unidades / trimestre"],["Línea Fit · dama","Surtido de tallas 24–34","~150 unidades / trimestre"]]},
+ s2:{motivo:"Surtir su tienda",deseo:"Probar la línea fit en volumen pequeño en su tienda de San Pedro Sula antes de comprometer un pedido mayor.",urg:"Media",prods:[["Línea Fit · dama","Tallas 26–34 · azul claro y negro","~80 unidades / mes"]]},
+ s3:{motivo:"Compra personal",deseo:"Comprar un jean clásico en talla 32 en Ciudad de Panamá.",urg:"Baja",prods:[["Jean clásico · caballero","Azul oscuro · talla 32","1 unidad"]]}
+};
+function liveInteres(){const l=lead.linea||"Por definir";
+  if(sc===1) return {motivo:"Quiere distribuir la marca en Chile",deseo:"Traer la marca a Chile como distribuidor mayorista para sus 3 tiendas, con un pedido inicial de unas 600 unidades.",urg:"Alta",prods:[[l,"Surtido de tallas","~600 unidades (pedido inicial)"]]};
+  if(sc===2) return {motivo:"Compra personal",deseo:`Comprar el ${l.toLowerCase()} que vio en Instagram en una tienda de ${lead.ciudad||"su ciudad"}.`,urg:"Media",prods:[[l+" · dama","Visto en publicación de Instagram","1–2 unidades"]]};
+  return {motivo:(lead.solicitud||"Información")+" para su tienda",deseo:`Conocer la línea ${l.toLowerCase()} y surtir su tienda de ${lead.ciudad||"Guatemala"} (${(lead.venta||"").toLowerCase()}).`,urg:"Media",prods:[[l,"Surtido para tienda","Cantidad a definir con la tienda"]]};
+}
+/* insertar sección de interés en la ficha */
+document.querySelector("#v-ficha .f-grid > section.f-col").insertAdjacentHTML("afterbegin",`<div class="box int"><h3>Interés y motivo del contacto <span class="pill" id="iUrg"></span></h3>
+ <div class="int-top"><div><span class="k">Motivo</span><b id="iMot"></b></div><div><span class="k">Qué desea realmente</span><p id="iDes"></p></div></div>
+ <div><span class="k">Productos de interés</span><div class="prods" id="iProds"></div></div>
+ <p class="ex">Detectado por el agente durante la conversación · editable por el equipo.</p></div>`);
+const _openFicha=openFicha;
+openFicha=function(id){
+  const gen=id&&id.startsWith("g");
+  if(gen && !FICHAS[id]) FICHAS[id]=GEN[id].ficha;
+  _openFicha(id);
+  const it=id==="live"?liveInteres():(INTERES[id]||(gen?GEN[id].interes:null));
+  if(!it) return;
+  $("iMot").textContent=it.motivo;$("iDes").textContent=it.deseo;
+  const u=$("iUrg");u.textContent="Urgencia: "+it.urg;u.className="pill "+(it.urg==="Alta"?"p-wait":it.urg==="Media"?"p-ref":"p-none");
+  $("iProds").innerHTML=it.prods.map(p=>`<div class="prod"><div class="ph">👖</div><div><b>${p[0]}</b><span>${p[1]}</span><em>${p[2]}</em></div></div>`).join("");
+  $("fBack").textContent=backTo?"← Volver a "+backTo.name:"← Volver a contactos y al chat";
+};
+/* ===== Distribuidores: clic para entrar ===== */
+const NOMBRES=["Ana Pérez","José Ramírez","Gabriela Ortiz","Mario López","Sofía Castro","Daniel Rivas","Paola Méndez","Andrés Solano","Carla Núñez","Héctor Ruiz","Natalia Flores","Jorge Aguilar"];
+const LINEAS=["Fit / ajustado","Jean clásico","Varias líneas"];
+const GEN={}; let backTo=null;
+function distContacts(i){
+  const d=DIST[i], n=Math.min(d[4],8), out=[];
+  const link={"Punto Favorito":"s0","LoMax":"s2"}[d[0]];
+  if(link) out.push({id:link,nm:FICHAS[link].nombre,fecha:"12 nov",perfil:FICHAS[link].perfil,int:FICHAS[link].lineas,st:FICHAS[link].estado});
+  if(lead.asignado===d[0]) out.unshift({id:"live",nm:LIVE_NAMES[sc][0],fecha:"12 nov",perfil:sc===2?"Consumidor":"Tienda",int:lead.linea,st:$("status").textContent});
+  for(let k=0;out.length<n;k++){
+    const id=`g${i}_${k}`, nm=NOMBRES[(i*3+k)%NOMBRES.length], perfil=k%3===0?"Tienda":"Consumidor", ln=LINEAS[(i+k)%3];
+    const bad=(100-d[5])/100, r=((i*7+k*13)%100)/100;
+    const st=r<bad?(d[5]<70?"Escalado a Casa Matriz":"Pendiente"):"Atendido";
+    const day=11-k;
+    out.push({id,nm,fecha:`${day} nov`,perfil,int:ln,st});
+    if(!GEN[id]) GEN[id]={ficha:{nombre:nm,ini:nm.split(" ").map(x=>x[0]).join(""),canal:["WhatsApp","Instagram","Messenger"][k%3],tel:"+"+CC[d[1]]+" •••• "+(1000+k*137),correo:"—",pais:d[1],ciudad:d[2],perfil,tienda:perfil==="Tienda"?"Sí":"No",venta:perfil==="Tienda"?"Al detal":"—",origen:["WhatsApp","Instagram","Messenger"][k%3],primera:`${day} nov 2026`,idioma:"Español",
+      tags:[perfil,ln,d[1]],potencial:perfil==="Tienda"?"Medio":"Bajo",volumen:perfil==="Tienda"?"~40 unidades / mes":"Compra personal",lineas:ln,
+      estado:st,asignado:st.startsWith("Escalado")?"Ventas Casa Matriz":d[0],asigTipo:st.startsWith("Escalado")?"matriz":"dist",rate:d[5],resp:"Carlos M. (Ventas)",
+      dias:[{d:`${day} nov 2026`,canal:"WhatsApp",txt:`${perfil} en ${d[2]} interesado en ${ln.toLowerCase()}. Referido a ${d[0]}.`,int:perfil==="Tienda"?"Información de producto":"Dónde comprar",sent:"Positivo 😊"}],
+      conv:[B(`Hola, ¿dónde consigo la línea ${ln.toLowerCase()} en ${d[2]}?`,"out","10:12"),B(`¡Hola! En ${d[2]} te atiende <b>${d[0]}</b>. Ya les avisamos para que te contacten.`,"in","10:13")],
+      notas:[],tasks:st==="Atendido"?[{t:"Seguimiento automático",due:"Completado",done:true}]:[{t:"Seguimiento automático: ¿te contactó el distribuidor?",due:`${day+2} nov · Agente`,done:false}],
+      route:[{t:`${day} nov · 10:13`,txt:`${perfil} en ${d[2]} → ${d[0]}`}].concat(st.startsWith("Escalado")?[{t:`${day+2} nov · 10:15`,txt:`Sin respuesta del distribuidor en 48 h → Ventas Casa Matriz`}]:[]).reverse()},
+      interes:{motivo:perfil==="Tienda"?"Surtir su tienda":"Compra personal",deseo:perfil==="Tienda"?`Surtir su tienda en ${d[2]} con la línea ${ln.toLowerCase()}.`:`Comprar un jean ${ln.toLowerCase()} cerca de su casa en ${d[2]}.`,urg:perfil==="Tienda"?"Media":"Baja",prods:[[ln,perfil==="Tienda"?"Surtido de tallas":"Talla 30",perfil==="Tienda"?"~40 unidades":"1 unidad"]]}};
+  }
+  return out;
+}
+const tFirst=r=>r>=95?"1 h":r>=90?"2 h":r>=85?"4 h":r>=80?"6 h":r>=65?"18 h":"31 h";
+function renderDist(){
+  const countries=["Todos",...new Set(DIST.map(d=>d[1]))];
+  $("distFilters").innerHTML=countries.map(c=>`<button type="button" class="fbtn ${c===distFilter?"on":""}" data-c="${c}">${c}</button>`).join("");
+  $("distFilters").querySelectorAll("button").forEach(b=>b.onclick=()=>{distFilter=b.dataset.c;renderDist()});
+  $("distRows").innerHTML=DIST.map((d,i)=>[d,i]).filter(([d])=>distFilter==="Todos"||d[1]===distFilter).map(([d,i])=>`<tr class="click" data-i="${i}" tabindex="0"><td><b>${d[0]}</b><br><span class="ex" style="font-style:normal">@${d[8]}</span></td><td>${d[1]}<br><span class="ex" style="font-style:normal">${d[2]}</span></td><td>${d[3]}</td><td class="r">${d[4]}</td><td>${rateBar(d[5])}</td><td><span class="pill ${d[7]==="Activo"?"p-ok":"p-wait"}">${d[7]}</span></td><td><button type="button" class="linkbtn">Ver →</button></td></tr>`).join("");
+  const th=document.querySelector("#v-dist thead tr"); if(!th.dataset.x){th.insertAdjacentHTML("beforeend","<th></th>");th.dataset.x=1}
+  $("distRows").querySelectorAll("tr").forEach(tr=>{tr.onclick=()=>openDist(+tr.dataset.i);tr.onkeydown=e=>{if(e.key==="Enter")openDist(+tr.dataset.i)}});
+  $("expansion").innerHTML=EXPANSION.map(e=>`<div><b>${e[0]}</b><span>${e[1]} ${e[2]}</span></div>`).join("");
+}
+document.querySelector(".k-main").insertAdjacentHTML("beforeend",`<div class="view" id="v-distdet" hidden>
+  <div class="k-head"><button type="button" class="back" id="dBack">← Volver al directorio</button><span class="ex">Tiendas reales · cifras simuladas</span></div>
+  <div class="f-hero"><div class="f-av" id="dAv" style="border-radius:12px">MT</div><div class="f-id"><h2 id="dName"></h2><p id="dSub"></p><div class="chips" id="dChips"></div></div>
+    <div class="f-actions"><span class="pill" id="dState"></span><button type="button" class="act" id="dEdit">Editar datos</button><button type="button" class="act" id="dPause">Pausar recepción de contactos</button></div></div>
+  <p class="toast" id="dToast" role="status"></p>
+  <div class="kpis" id="dKpis"></div>
+  <div class="grid2" style="grid-template-columns:minmax(0,1fr) 300px">
+    <div class="box"><h3>Contactos asignados <span class="ex" id="dCount"></span></h3>
+      <div class="filters" id="dFilt"></div>
+      <div style="overflow-x:auto"><table><thead><tr><th>Contacto</th><th>Fecha</th><th>Perfil</th><th>Interés</th><th>Estado</th><th></th></tr></thead><tbody id="dRows"></tbody></table></div></div>
+    <div class="f-col">
+      <div class="box"><h3>Datos de la tienda</h3><dl class="dl" id="dData"></dl></div>
+      <div class="box"><h3>Lo que más piden en su zona</h3><div class="bars" id="dBars"></div></div>
+    </div>
+  </div>
+</div>`);
+let curDist=0, dFilter="Todos";
+function stCls(s){return s.startsWith("Atendido")?"p-ok":s.startsWith("Escalado")||s.includes("Casa Matriz")?"p-wait":s.startsWith("Pendiente")||s.startsWith("Referido")?"p-ref":"p-new"}
+function openDist(i){
+  curDist=i; dFilter="Todos"; const d=DIST[i], pc=n=>`<span class="pc">${n}</span>`;
+  $("dAv").textContent=d[0].split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase();
+  $("dName").textContent=d[0];
+  $("dSub").textContent=`Tienda autorizada Jean Center · ${d[2]}, ${d[1]} · ${d[3]}`;
+  $("dChips").innerHTML=[`Instagram: @${d[8]}`,`Cubre: ${d[2]} y alrededores`,`Red de detal 2025`].map(x=>`<span>${x}</span>`).join("");
+  const s=$("dState");s.textContent=d[7];s.className="pill "+(d[7]==="Activo"?"p-ok":"p-wait");
+  const esc2=d[5]<70?Math.round(d[4]*(100-d[5])/100):Math.round(d[4]*(100-d[5])/200);
+  $("dKpis").innerHTML=[[d[4],"Contactos este mes"],[d[5]+"%","Tasa de respuesta",d[5]<70],[tFirst(d[5]),"Tiempo promedio de primer contacto",d[5]<70],[esc2,"Escalados a Casa Matriz",d[5]<70]].map(k=>`<div class="kpi" ${k[2]?'style="border-color:#F2B8B8;background:#FFF7F7"':""}><b>${k[0]}</b><span>${k[1]}</span></div>`).join("");
+  $("dData").innerHTML=[["Instagram",`<a href="https://instagram.com/${d[8]}" target="_blank" rel="noopener">@${d[8]}</a>`],["Contacto principal",`${dContact(i).nombre} · ${dContact(i).cargo}`],["Teléfono / WhatsApp",dContact(i).tel],["Correo para leads",dContact(i).correo],["Dirección",dContact(i).dir],["País · Ciudad",`${d[1]} · ${d[2]}`],["Tipo de venta",d[3]],["Recibe leads por","Correo + enlace 'Lo atendí'"],["Última actualización",d[6]]].map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  const tot=d[4]; const a=Math.round(tot*.45),b=Math.round(tot*.35);
+  bars("dBars",[["Fit / ajustado",a],["Jean clásico",b],["Varias líneas",tot-a-b]]);
+  $("dToast").innerHTML=(d[5]<70?"<span style=\"color:#B45309\">⚠ Esta tienda responde por debajo del 70%. Los contactos sin respuesta en 48 h se escalan solos a Casa Matriz.</span>":"")+"<br><span class=\"ex\">Cifras de desempeño simuladas para el demo.</span>";
+  renderDistContacts(); showView("distdet");
+}
+function renderDistContacts(){
+  const d=DIST[curDist], list=distContacts(curDist), sts=["Todos",...new Set(list.map(c=>c.st))];
+  $("dFilt").innerHTML=sts.map(x=>`<button type="button" class="fbtn ${x===dFilter?"on":""}">${x}</button>`).join("");
+  $("dFilt").querySelectorAll("button").forEach(b=>b.onclick=()=>{dFilter=b.textContent;renderDistContacts()});
+  const shown=list.filter(c=>dFilter==="Todos"||c.st===dFilter);
+  $("dCount").textContent=`Mostrando ${shown.length} de ${d[4]} este mes`;
+  $("dRows").innerHTML=shown.map(c=>`<tr class="click" data-id="${c.id}" tabindex="0"><td><span class="nm">${c.nm}</span></td><td>${c.fecha}</td><td>${c.perfil}</td><td>${c.int||"—"}</td><td><span class="pill ${stCls(c.st)}">${c.st}</span></td><td><button type="button" class="linkbtn">Ver ficha →</button></td></tr>`).join("");
+  $("dRows").querySelectorAll("tr").forEach(tr=>{const go=()=>{backTo={name:DIST[curDist][0],i:curDist};openFicha(tr.dataset.id)};tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter")go()}});
+}
+function showView(v){document.body.classList.toggle("wide",v==="ficha"||v==="distdet");
+  ["contactos","dist","rep","ficha","distdet"].forEach(x=>$("v-"+x).hidden=x!==v);
+  const nav=v==="ficha"?(backTo?"dist":"contactos"):v==="distdet"?"dist":v;
+  document.querySelectorAll("[data-view]").forEach(x=>x.classList.toggle("on",x.dataset.view===nav));document.querySelector(".k-main").scrollTop=0}
+document.querySelectorAll("[data-view]").forEach(b=>b.onclick=()=>{backTo=null;showView(b.dataset.view)});
+$("fBack").onclick=()=>{if(backTo){const i=backTo.i;backTo=null;openDist(i)}else showView("contactos")};
+$("dBack").onclick=()=>showView("dist");
+$("dEdit").onclick=()=>{$("dToast").textContent="Jean Center edita aquí los datos, zonas y correos del distribuidor; el agente usa la información nueva de inmediato."};
+$("dPause").onclick=()=>{$("dToast").textContent="Recepción pausada (simulado): los contactos de esta zona irán a Ventas Casa Matriz hasta reactivarlo."};
+$("rows").addEventListener("click",()=>{backTo=null},true);
+renderDist();
+$("liveOpen").onclick=()=>{backTo=null;openFicha("live")};
+
+let started=false;
+$("goDemo").onclick=()=>{$("cover").hidden=true;window.scrollTo(0,0);if(!started){started=true;start()}};
+$("home").onclick=()=>{$("cover").hidden=false};
+</script>
+</body>
+</html>
