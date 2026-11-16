@@ -322,6 +322,24 @@ body.wide .k-shell{max-height:none}
 .hk-out .row2 span{font-size:12px;color:#B9BDD0}
 .hk-out .formula{font-size:12.5px;color:#B9BDD0;line-height:1.5}
 .hk-note{font-size:12px;color:#8F94AD;margin-top:14px;line-height:1.5}
+
+.hk-sec{display:flex;flex-direction:column;gap:18px}
+.hk-sec h2{font:700 34px/1.15 var(--display);margin:0;max-width:1000px;text-wrap:balance}
+.hk-eye{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--magenta);font-weight:700}
+.hk-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hk-logos div{background:#fff;color:var(--navy);border-radius:12px;min-height:74px;display:grid;place-items:center;text-align:center;padding:12px;font:700 17px var(--display)}
+.hk-logos div.more{background:transparent;border:1px dashed rgba(203,108,230,.6);color:var(--magenta)}
+.hk-road{display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden}
+.hk-road>div{display:grid;grid-template-columns:1.3fr 2.4fr .8fr 1fr;gap:14px;padding:13px 18px;font-size:14px;color:#DADCE6;border-top:1px solid rgba(255,255,255,.08)}
+.hk-road>div:first-child{border-top:0}
+.hk-road .hd{background:rgba(255,255,255,.06);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#B9BDD0;font-weight:700}
+.hk-road b{color:var(--magenta);font-family:var(--display)}
+.hk-road .dt{font-weight:600;color:#fff}
+.hk-next{border-top:0;padding-top:0}
+.hk-contact{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:13.5px;color:#C9CCD9;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+.hk-contact b{color:#fff}
+.cv-go .hk-btn.ghost{padding:12px 20px}
+@media (max-width:900px){.hk-logos{grid-template-columns:repeat(2,1fr)}.hk-road>div{grid-template-columns:1fr}.hk-road .hd{display:none}.hk-sec h2{font-size:26px}}
 @media (max-width:900px){.hk-grid,.hk-cgrid{grid-template-columns:1fr}.hk-phone{height:480px}.hk-txt h2{font-size:34px}.hk-out .money{font-size:42px}}
 
 </style>
@@ -331,14 +349,33 @@ body.wide .k-shell{max-height:none}
  <div class="cv">
   <div class="cv-top"><img alt="HenkanCX" src="data:image/png;base64,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"><span>HenkanCX presenta</span><span class="x">Propuesta para Jean Center · Noviembre 2026</span></div>
   <nav class="hk-nav" aria-label="Pasos de la portada">
-   <button type="button" data-pane="1" class="on">1 · El mensaje</button>
-   <button type="button" data-pane="2">2 · El costo</button>
-   <button type="button" data-pane="3">3 · La solución</button>
+   <button type="button" data-pane="0" class="on">1 · Quiénes somos</button>
+   <button type="button" data-pane="1">2 · El mensaje</button>
+   <button type="button" data-pane="2">3 · El costo</button>
+   <button type="button" data-pane="3">4 · La solución</button>
+   <button type="button" data-pane="4">5 · Hoja de ruta</button>
    <button type="button" class="skip" id="hkSkip">Saltar al demo →</button>
   </nav>
 
+
+  <!-- PANE 0 · Quiénes somos -->
+  <section class="hk-pane hk-sec" id="hkP0">
+   <span class="hk-eye">Quiénes somos</span>
+   <h2>Somos HenkanCX: el copiloto de IA y automatización para la experiencia del cliente en Latinoamérica.</h2>
+   <div class="cv-cards">
+    <div><i>📍</i><b>Nacimos en Panamá, en 2021</b><span>Con foco en empresas latinoamericanas que crecen y no pueden perder clientes por falta de respuesta.</span></div>
+    <div><i>🔄</i><b>Todo el ciclo del cliente</b><span>Captación, atención, operación y postventa, automatizadas con IA y conectadas a los sistemas de cada empresa.</span></div>
+    <div><i>⚡</i><b>Implementación rápida</b><span>Soluciones en producción en semanas, con indicadores claros desde el primer mes.</span></div>
+   </div>
+   <span class="hk-eye" style="margin-top:6px">Empresas que confían en nosotros</span>
+   <div class="hk-logos">
+    <div>Deligourmet</div><div>Nisato</div><div>La Regional de Seguros</div><div>Seguros Caracas</div>
+    <div>Mystic</div><div>CID Group</div><div>Phoenix Tower</div><div class="more">Entre otros</div>
+   </div>
+   <div class="hk-btns show"><button type="button" class="hk-btn" data-go="1">Empecemos por un mensaje →</button></div>
+  </section>
   <!-- PANE 1 · Gancho -->
-  <section class="hk-pane" id="hkP1">
+  <section class="hk-pane" id="hkP1" hidden>
    <div class="hk-grid">
     <div class="hk-phone" aria-label="Conversación de ejemplo">
      <div class="hk-head"><div class="av">JC</div><div><b>Jean Center</b><small id="hkStatus">últ. vez hace 3 días</small></div></div>
@@ -391,13 +428,35 @@ body.wide .k-shell{max-height:none}
    <div><i>🧭</i><b>Cada uno a su lugar</b><span>Lo dirige a la tienda autorizada de su ciudad o a Ventas en Casa Matriz (Panamá), y confirma a las 48 horas que fue atendido.</span></div>
    <div><i>📈</i><b>Visibilidad para decidir</b><span>Directorio con desempeño de cada distribuidor, seguimiento del tiempo de respuesta de Ventas y un reporte semanal.</span></div>
   </div>
-  <div class="cv-go" style="margin-top:28px"><button type="button" id="goDemo">Iniciar demo →</button><span>Prototipo navegable · tiendas reales de Jean Center · cifras simuladas</span></div>
+  <div class="cv-go" style="margin-top:28px"><button type="button" id="goDemo">Iniciar demo →</button><button type="button" class="hk-btn ghost" data-go="4">Ver la hoja de ruta →</button><span>Prototipo navegable · tiendas reales de Jean Center · cifras simuladas</span></div>
   <div class="cv-how" style="margin-top:28px">
    <div><b>Elige un caso</b> arriba: tienda, mayorista o consumidor.</div>
    <div><b>Responde en el chat</b> como si fueras el cliente.</div>
    <div><b>Mira Kaname</b> registrar y enrutar en tiempo real.</div>
    <div><b>Explora</b> fichas, distribuidores, Ventas · SLA y el reporte semanal.</div>
   </div>
+  </section>
+
+  <!-- PANE 4 · Hoja de ruta -->
+  <section class="hk-pane hk-sec" id="hkP4" hidden>
+   <span class="hk-eye">Hoja de ruta</span>
+   <h2>Implementación por etapas</h2>
+   <div class="hk-road" role="table" aria-label="Etapas del proyecto">
+    <div class="hd" role="row"><span>Etapa</span><span>Qué incluye</span><span>Duración</span><span>Fechas</span></div>
+    <div role="row"><span><b>1</b> · Conexión y seguimiento</span><span>WhatsApp en producción el 11 de enero; Instagram, Messenger y chat web el 29 de enero</span><span>8 semanas</span><span class="dt">7 dic – 29 ene</span></div>
+    <div role="row"><span><b>2</b> · Inteligencia de mercado</span><span>Tendencias propias comparadas con Google Trends</span><span>2 semanas</span><span class="dt">18 – 29 ene</span></div>
+    <div role="row"><span><b>3</b> · Catálogo, precios y foto</span><span>Respuestas de producto y reconocimiento por foto</span><span>3 semanas</span><span class="dt">1 – 19 feb</span></div>
+    <div role="row"><span><b>4</b> · Integración SAP</span><span>Precios e inventario en tiempo real</span><span>4 semanas</span><span class="dt">Por confirmar</span></div>
+   </div>
+   <span class="hk-eye" style="margin-top:8px">Para arrancar el 7 de diciembre</span>
+   <div class="cv-how hk-next">
+    <div><b>Validar el flujo:</b> ajustes del demo con Marketing y Ventas.</div>
+    <div><b>Completar el directorio:</b> ciudad, contacto y correo de cada tienda.</div>
+    <div><b>Propuesta y firma:</b> propuesta económica y aprobación antes del 4 de diciembre.</div>
+    <div><b>Inicio:</b> 7 de diciembre. WhatsApp en producción el 11 de enero.</div>
+   </div>
+   <div class="hk-contact"><span><b>Andrea Nava</b> · HenkanCX</span><span>info@henkancx.com</span><span>+507 6467 1392</span><span>henkancx.com</span></div>
+   <div class="hk-btns show"><button type="button" class="hk-btn" id="goDemo2">Iniciar demo →</button></div>
   </section>
   <p class="cv-foot">HenkanCX · henkancx.com · Transformamos la experiencia del cliente desde el día 1.</p>
  </div>
@@ -1165,7 +1224,7 @@ let started=false;
 const HK={timers:[],clock:null};
 function hkClear(){HK.timers.forEach(clearTimeout);HK.timers=[];if(HK.clock){cancelAnimationFrame(HK.clock);HK.clock=null}}
 function hkAt(ms,fn){HK.timers.push(setTimeout(fn,ms))}
-function hkPane(n){[1,2,3].forEach(i=>{$("hkP"+i).hidden=i!==n});document.querySelectorAll(".hk-nav [data-pane]").forEach(b=>b.classList.toggle("on",+b.dataset.pane===n));if(n===1)hkPlayLost();else hkClear();$("cover").scrollTop=0}
+function hkPane(n){[0,1,2,3,4].forEach(i=>{$("hkP"+i).hidden=i!==n});document.querySelectorAll(".hk-nav [data-pane]").forEach(b=>b.classList.toggle("on",+b.dataset.pane===n));if(n===1)hkPlayLost();else hkClear();$("cover").scrollTop=0}
 function hkAdd(html){const c=$("hkChat");c.insertAdjacentHTML("beforeend",html);c.scrollTop=c.scrollHeight}
 function hkMe(t,h,read){return `<div class="hk-b me">${t}<small>${h} <span class="tk${read?" read":""}">✓✓</span></small></div>`}
 function hkBot(t,h){return `<div class="hk-b bot">${t}<small>${h}</small></div>`}
@@ -1225,9 +1284,10 @@ function calc(){
 calc();
 function hkStartDemo(){hkClear();$("cover").hidden=true;window.scrollTo(0,0);if(!started){started=true;start()}}
 $("goDemo").onclick=hkStartDemo;
+$("goDemo2").onclick=hkStartDemo;
 $("hkSkip").onclick=hkStartDemo;
-$("home").onclick=()=>{$("cover").hidden=false;hkPane(1)};
-hkPlayLost();
+$("home").onclick=()=>{$("cover").hidden=false;hkPane(0)};
+hkPane(0);
 </script>
 </body>
 </html>
